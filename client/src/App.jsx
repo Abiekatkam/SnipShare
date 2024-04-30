@@ -1,11 +1,28 @@
 import React from 'react'
-import { Button } from './components/ui/button'
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import { LoginPage, RegisterPage, RootPage } from './pages';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootPage/>,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage/>,
+  },
+  {
+    path: "/login",
+    element: <LoginPage/>,
+  },
+]);
 
 const App = () => {
   return (
-    <div>
-      <Button>Click me</Button>
-    </div>
+    <RouterProvider router={router}/>
   )
 }
 
