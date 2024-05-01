@@ -7,7 +7,9 @@ import { v2 as cloudinary } from "cloudinary";
 // endpoint entries
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import postRoutes from "./routes/post.routes.js";
 
+// configuration
 dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -26,6 +28,7 @@ application.use(cookieParser());
 // end points
 application.use("/api/auth", authRoutes);
 application.use("/api/users", userRoutes);
+application.use("/api/posts", postRoutes);
 
 application.listen(PORT, () => {
   console.log(`server is running on port ${PORT} `);
