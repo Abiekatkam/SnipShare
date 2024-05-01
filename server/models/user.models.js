@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    facebookurl: {
+    twitterurl: {
       type: String,
       default: "",
     },

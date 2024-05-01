@@ -30,7 +30,7 @@ export const authRegister = async (req, res) => {
       });
     }
 
-    if (password.length < 8) {
+    if (password.length < 8 || password.length >= 17) {
       return res.status(400).json({
         status: "error",
         message: "Password length should more than 8 and less than 17",
