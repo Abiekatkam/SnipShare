@@ -66,18 +66,6 @@ const LoginPage = () => {
           <h2 className="lg:text-3xl font-semibold text-lg">Welcome back!</h2>
           <LoginForm />
 
-          <div className="lg:w-[80%] w-[90%] mt-3 flex lg:flex-row flex-col items-center justify-between gap-2">
-            <button className="w-fit text-[#009090b] font-semibold text-xs h-fit hover:underline">
-              Forgot password?
-            </button>
-            <p className="text-xs font-semibold text-slate-600">
-              Don't have an account?{" "}
-              <Link to="/register" className="text-[#09090b] hover:underline">
-                Register here.
-              </Link>{" "}
-            </p>
-          </div>
-
           <Separator className="lg:my-5 my-3 bg-slate-950/50" />
 
           <div className="w-full my-3 lg:my-0 flex flex-col lg:flex-row items-center justify-center gap-3">

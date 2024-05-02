@@ -7,6 +7,8 @@ import {
   FaGoogle,
   FaLinkedin,
   FaXTwitter,
+  FaRegEye,
+  FaRegEyeSlash  
 } from "react-icons/fa6";
 
 export {
@@ -18,4 +20,6 @@ export {
   FaInstagram,
   FaLinkedin,
   FaXTwitter,
+  FaRegEyeSlash ,
+  FaRegEye 
 };

@@ -1,20 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import {FaRegEyeSlash ,
+  FaRegEye } from "@/components/constants/Icons"
+import SpinLoader from "@/components/loaders/SpinLoader";
 
 const RegistrationForm = () => {
+  const [formState, setFormState] = useState({
+    username: "",
+    fullname: "",
+    email: "",
+    password: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [inputType, setInputType] = useState('password');
+
+  const loader = false;
+
+  const handleInputStateChange = (e) => {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(true);
+    setInputType("text");
+    setTimeout(() => {
+      setShowPassword(false);
+      setInputType("password");
+    }, 2000);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log(formState);
+  };
+
   return (
-    <form className="lg:w-[80%] w-[90%]">
+    <form className="lg:w-[80%] w-[90%]" onSubmit={handleFormSubmit}>
       <label className="mb-1 block mt-2 w-full">
         <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
-         Username
+          Username
         </span>
         <input
           className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
           autoFocus
           inputMode="text"
+          autoComplete="username"
           type="text"
+          name="username"
+          onChange={handleInputStateChange}
+          value={formState.username}
           placeholder="eg: jullietmarie09"
           required
         />
@@ -27,6 +63,10 @@ const RegistrationForm = () => {
           className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
           inputMode="text"
           type="text"
+          autoComplete="fullname"
+          name="fullname"
+          onChange={handleInputStateChange}
+          value={formState.fullname}
           placeholder="eg: Julliet Marie"
           required
         />
@@ -40,6 +80,9 @@ const RegistrationForm = () => {
           inputMode="email"
           autoComplete="email"
           type="email"
+          name="email"
+          onChange={handleInputStateChange}
+          value={formState.email}
           placeholder="eg: your-email-address@email.com"
           required
         />
@@ -48,24 +91,37 @@ const RegistrationForm = () => {
         <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
           Password
         </span>
-        <input
-          className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
-          inputMode="password"
-          type="password"
-          placeholder="*******"
-          required
-        />
+        <div className="relative">
+          <input
+            className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+            inputMode="password"
+            type={inputType}
+            name="password"
+            autoComplete="current-password"
+            onChange={handleInputStateChange}
+            value={formState.password}
+            placeholder="********"
+            required
+          />
+          <button
+            type="button"
+            className={`absolute inset-y-0 right-0 items-center text-slate-500 px-2 ${formState.password.length > 1 ? "flex": "hidden"}`}
+            onClick={handleTogglePassword}
+          >
+            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+          </button>
+        </div>
       </label>
 
       <div className="flex items-center space-x-2 mt-4 text-slate-500">
-        <Checkbox id="termsAndCondition" />
+        <Checkbox id="termsAndCondition" required />
         <Label htmlFor="termsAndCondition" className="text-xs">
           By clicking, you accept our privacy policy.
         </Label>
       </div>
 
-      <Button className="w-full mt-4 h-8 lg:h-10 font-bold bg-[#09090b]">
-        Register
+      <Button className="w-full mt-4 h-8 lg:h-10 font-bold bg-[#09090b]" disabled={loader}>
+        {loader ? <SpinLoader/> : "Register"}
       </Button>
     </form>
   );
