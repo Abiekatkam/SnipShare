@@ -19,12 +19,9 @@ const RegisterPage = () => {
     <main className="m-auto flex lg:h-[100vh] h-fit w-full flex-col items-center justify-center pl-2 pr-2">
       <div className="m-auto flex w-fit flex-col lg:flex-row justify-center lg:gap-3 lg:p-6 p-2 sm:p-10">
         <div className="lg:w-[480px] w-full flex flex-col items-center justify-center">
-          <Link
-            to="/"
-            className="lg:text-8xl text-5xl font-black dancing-script transition-all ease-in duration-200"
-          >
-            <h1>SnipShare.</h1>
-          </Link>
+          <h1 className="lg:text-8xl text-5xl font-black dancing-script transition-all ease-in duration-200">
+            SnipShare.
+          </h1>
           <h2 className="lg:text-lg text-md mt-1 font-bold capitalize">
             Connect, Collaborate, Create.
           </h2>
@@ -67,12 +64,12 @@ const RegisterPage = () => {
           </div>
         </div>
         <div className="lg:w-[480px] w-full flex flex-col items-center justify-start lg:p-4 lg:pl-6 lg:ml-10">
-          <h2 className="lg:text-3xl font-semibold text-lg">
+          <h2 className="lg:text-2xl font-semibold text-lg">
             Create an account
           </h2>
           <RegistrationForm />
 
-          <p className="lg:text-sm text-xs mt-3 font-semibold text-slate-600">
+          <p className="lg:w-[80%] w-[90%] text-xs mt-3 font-semibold text-slate-600">
             Already a user?{" "}
             <Link to="/login" className="text-[#09090b] hover:underline">
               Login here.

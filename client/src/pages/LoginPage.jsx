@@ -18,12 +18,9 @@ const LoginPage = () => {
     <main className="m-auto flex lg:h-[100vh] h-fit w-full flex-col items-center justify-center pl-2 pr-2">
       <div className="m-auto flex w-fit flex-col lg:flex-row justify-center lg:gap-3 lg:p-6 p-2 sm:p-10">
         <div className="lg:w-[480px] w-full flex flex-col items-center justify-center">
-          <Link
-            to="/"
-            className="lg:text-8xl text-5xl font-black dancing-script transition-all ease-in duration-200"
-          >
-            <h1>SnipShare.</h1>
-          </Link>
+          <h1 className="lg:text-8xl text-5xl font-black dancing-script transition-all ease-in duration-200">
+            SnipShare.
+          </h1>
           <h2 className="lg:text-lg text-md mt-1 font-bold capitalize">
             Connect, Collaborate, Create.
           </h2>
@@ -69,12 +66,17 @@ const LoginPage = () => {
           <h2 className="lg:text-3xl font-semibold text-lg">Welcome back!</h2>
           <LoginForm />
 
-          <p className="lg:text-sm text-xs mt-3 font-semibold text-slate-600">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-[#09090b] hover:underline">
-              Register here.
-            </Link>{" "}
-          </p>
+          <div className="lg:w-[80%] w-[90%] mt-3 flex lg:flex-row flex-col items-center justify-between gap-2">
+            <button className="w-fit text-[#009090b] font-semibold text-xs h-fit hover:underline">
+              Forgot password?
+            </button>
+            <p className="text-xs font-semibold text-slate-600">
+              Don't have an account?{" "}
+              <Link to="/register" className="text-[#09090b] hover:underline">
+                Register here.
+              </Link>{" "}
+            </p>
+          </div>
 
           <Separator className="lg:my-5 my-3 bg-slate-950/50" />
 
