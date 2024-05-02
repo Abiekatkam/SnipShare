@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import SpinLoader from "@/components/loaders/SpinLoader";
 import { FaRegEyeSlash, FaRegEye } from "@/components/constants/Icons";
 import ForgotPasswordModal from "@/components/modals/ForgotPasswordModal";

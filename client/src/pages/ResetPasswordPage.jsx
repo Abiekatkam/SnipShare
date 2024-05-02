@@ -10,6 +10,7 @@ import {
   FaLinkedin,
   FaXTwitter,
 } from "@/components/constants/Icons";
+import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
 
 const ResetPasswordPage = () => {
   return (
@@ -61,10 +62,8 @@ const ResetPasswordPage = () => {
           </div>
         </div>
         <div className="lg:w-[480px] w-full flex flex-col items-center justify-start lg:p-4 lg:pl-6 lg:ml-10">
-          <h2 className="lg:text-2xl font-semibold text-lg">
-            Reset Password
-          </h2>
-          {/* <RegistrationForm /> */}
+          <h2 className="lg:text-2xl font-semibold text-lg">Reset Password</h2>
+          <ResetPasswordForm />
 
           <div className="w-full lg:hidden my-4 flex flex-col items-center justify-center text-center">
             <p className="text-xs lg:text-md font-normal">

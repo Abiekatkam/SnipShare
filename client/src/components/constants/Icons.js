@@ -1,6 +1,6 @@
 import { BiSupport } from "react-icons/bi";
 import { HiOutlineMail } from "react-icons/hi";
-import { LuCopyright } from "react-icons/lu";
+import { LuCopyright, LuLogOut } from "react-icons/lu";
 import {
   FaGithub,
   FaInstagram,
@@ -8,8 +8,11 @@ import {
   FaLinkedin,
   FaXTwitter,
   FaRegEye,
-  FaRegEyeSlash  
+  FaRegEyeSlash,
+  FaGear,
 } from "react-icons/fa6";
+import { FaHome, FaSearch, FaBell, FaRegUser } from "react-icons/fa";
+import { MdOutlineMail } from "react-icons/md";
 
 export {
   FaGoogle,
@@ -20,6 +23,13 @@ export {
   FaInstagram,
   FaLinkedin,
   FaXTwitter,
-  FaRegEyeSlash ,
-  FaRegEye 
+  FaRegEyeSlash,
+  FaRegEye,
+  FaHome,
+  FaSearch,
+  FaBell,
+  FaRegUser,
+  FaGear,
+  MdOutlineMail,
+  LuLogOut,
 };
