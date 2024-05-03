@@ -3,8 +3,14 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import Avatar from "../../../public/avatar-placeholder.png";
 import { Separator } from "../ui/separator";
-import { IoImageOutline, IoClose,FaRegFaceSmile  } from "@/components/constants/Icons";
+import {
+  IoImageOutline,
+  IoClose,
+  FaRegFaceSmile,
+} from "@/components/constants/Icons";
 import SpinLoader from "../loaders/SpinLoader";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import "emoji-picker-element";
 
 const CreatePostForm = () => {
   const [formState, setFormState] = useState({
@@ -25,6 +31,7 @@ const CreatePostForm = () => {
 
   const imageFileInputRef = useRef(null);
   const loader = false;
+  const theme = localStorage.getItem("vite-ui-theme");
 
   const handleImageFileClick = () => {
     imageFileInputRef.current.click();
@@ -45,6 +52,13 @@ const CreatePostForm = () => {
   const handleRemoveFile = () => {
     setSource(null);
     setPreviewUrl(null);
+  };
+
+  const handleEmojiClick = (event, emojiObject) => {
+    setFormState((prevFormState) => ({
+      ...prevFormState,
+      description: prevFormState.description + emojiObject.emoji,
+    }));
   };
 
   return (
@@ -81,11 +95,15 @@ const CreatePostForm = () => {
               {source.type.includes("image") ? (
                 <img src={previewUrl} alt="Preview" className="rounded-lg" />
               ) : (
-                <video autoPlay controls controlsList="nodownload nofullscreen" className="rounded-lg">
+                <video
+                  autoPlay
+                  controls
+                  controlsList="nodownload nofullscreen"
+                  className="rounded-lg"
+                >
                   <source src={previewUrl} type={source.type} />
                   Your browser does not support the video tag.
                 </video>
-               
               )}
             </div>
           )}
@@ -107,23 +125,25 @@ const CreatePostForm = () => {
           >
             <IoImageOutline />
           </button>
-          <button
-            className="w-8 h-8 text-xl flex items-center justify-center text-slate-600 dark:text-slate-400 dark:hover:text-slate-50 hover:text-slate-800 transition-all ease-in duration-200"
-          >
-            <FaRegFaceSmile  />
-          </button>
+          <Popover>
+            <PopoverTrigger>
+              <button className="w-8 h-8 text-xl flex items-center justify-center text-slate-600 dark:text-slate-400 dark:hover:text-slate-50 hover:text-slate-800 transition-all ease-in duration-200">
+                <FaRegFaceSmile />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-fit p-0">
+              <emoji-picker emoji-version="15.0" onClick={handleEmojiClick}></emoji-picker>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="w-fit flex items-center gap-3">
           <p className="text-[#09090b] dark:text-white font-semibold">
             {remainingChars}{" "}
             <span className="font-normal">characters left</span>
           </p>
-          <Button
-            className="h-9 font-semibold"
-            disabled={loader}
-          >
-          {loader ? <SpinLoader /> : "Post"}
-        </Button>
+          <Button className="h-9 font-semibold" disabled={loader}>
+            {loader ? <SpinLoader /> : "Post"}
+          </Button>
         </div>
       </div>
     </form>
