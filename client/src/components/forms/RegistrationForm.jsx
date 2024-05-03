@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import {FaRegEyeSlash ,
-  FaRegEye } from "@/components/constants/Icons"
+import { FaRegEyeSlash, FaRegEye } from "@/components/constants/Icons";
 import SpinLoader from "@/components/loaders/SpinLoader";
 
 const RegistrationForm = () => {
@@ -14,7 +13,7 @@ const RegistrationForm = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [inputType, setInputType] = useState('password');
+  const [inputType, setInputType] = useState("password");
 
   const loader = false;
 
@@ -39,11 +38,11 @@ const RegistrationForm = () => {
   return (
     <form className="lg:w-[80%] w-[90%]" onSubmit={handleFormSubmit}>
       <label className="mb-1 block mt-2 w-full">
-        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
+      <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
           Username
         </span>
         <input
-          className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+           className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
           autoFocus
           inputMode="text"
           autoComplete="username"
@@ -56,11 +55,11 @@ const RegistrationForm = () => {
         />
       </label>
       <label className="mb-1 block mt-2 w-full">
-        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
+      <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
           Full Name
         </span>
         <input
-          className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+           className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
           inputMode="text"
           type="text"
           autoComplete="fullname"
@@ -72,11 +71,11 @@ const RegistrationForm = () => {
         />
       </label>
       <label className="mb-1 block mt-2 w-full">
-        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
+      <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
           Email Address
         </span>
         <input
-          className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+           className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
           inputMode="email"
           autoComplete="email"
           type="email"
@@ -88,12 +87,12 @@ const RegistrationForm = () => {
         />
       </label>
       <label className="mb-1 block mt-2 w-full">
-        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
+      <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
           Password
         </span>
         <div className="relative">
           <input
-            className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+             className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
             inputMode="password"
             type={inputType}
             name="password"
@@ -105,7 +104,9 @@ const RegistrationForm = () => {
           />
           <button
             type="button"
-            className={`absolute inset-y-0 right-0 items-center text-slate-500 px-2 ${formState.password.length > 1 ? "flex": "hidden"}`}
+            className={`absolute inset-y-0 right-0 items-center text-slate-500 px-2 ${
+              formState.password.length > 1 ? "flex" : "hidden"
+            }`}
             onClick={handleTogglePassword}
           >
             {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
@@ -113,15 +114,18 @@ const RegistrationForm = () => {
         </div>
       </label>
 
-      <div className="flex items-center space-x-2 mt-4 text-slate-500">
+      <div className="flex items-center space-x-2 mt-4 text-slate-500 dark:text-slate-300">
         <Checkbox id="termsAndCondition" required />
         <Label htmlFor="termsAndCondition" className="text-xs">
           By clicking, you accept our privacy policy.
         </Label>
       </div>
 
-      <Button className="w-full mt-4 h-8 lg:h-10 font-bold bg-[#09090b]" disabled={loader}>
-        {loader ? <SpinLoader/> : "Register"}
+      <Button
+        className="w-full mt-4 h-9 font-bold bg-[#09090b] dark:bg-white"
+        disabled={loader}
+      >
+        {loader ? <SpinLoader /> : "Register"}
       </Button>
     </form>
   );

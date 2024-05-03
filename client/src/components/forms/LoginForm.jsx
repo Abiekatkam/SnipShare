@@ -37,11 +37,11 @@ const LoginForm = () => {
     <>
       <form className="lg:w-[80%] w-[90%]" onSubmit={handleFormSubmit}>
         <label className="mb-1 block mt-2 w-full">
-          <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
+        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
             Email Address
           </span>
           <input
-            className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+             className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
             inputMode="email"
             autoComplete="email"
             autoFocus
@@ -54,12 +54,12 @@ const LoginForm = () => {
           />
         </label>
         <label className="mb-1 block mt-2 w-full">
-          <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700">
+        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
             Password
           </span>
           <div className="relative">
             <input
-              className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white px-3 text-sm text-black shadow-sm ring-1 ring-gray-400 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900"
+               className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
               inputMode="password"
               type={inputType}
               name="password"
@@ -81,18 +81,18 @@ const LoginForm = () => {
           </div>
         </label>
         <Button
-          className="w-full mt-4 h-8 lg:h-10 font-bold bg-[#09090b]"
-          disabled={loader}
-        >
+            className="w-full mt-4 h-9 font-bold bg-[#09090b] dark:bg-white"
+            disabled={loader}
+          >
           {loader ? <SpinLoader /> : "Login"}
         </Button>
       </form>
 
       <div className="lg:w-[80%] w-[90%] mt-3 flex lg:flex-row flex-col items-center justify-between gap-2">
         <ForgotPasswordModal targetEmail={formState.email} />
-        <p className="text-xs font-semibold text-slate-600">
+        <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
           Don't have an account?{" "}
-          <Link to="/register" className="text-[#09090b] hover:underline">
+          <Link to="/register" className="text-[#09090b] hover:underline dark:text-slate-300">
             Register here.
           </Link>{" "}
         </p>

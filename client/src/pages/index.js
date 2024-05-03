@@ -1,6 +1,8 @@
-import RootPage from "./RootPage";
-import RegisterPage from "./RegisterPage";
-import LoginPage from "./LoginPage";
-import ResetPasswordPage from "./ResetPasswordPage";
+import RootPage from "./home/RootPage";
+import RegisterPage from "./register/RegisterPage";
+import LoginPage from "./login/LoginPage";
+import ResetPasswordPage from "./error/ResetPasswordPage";
+import ErrorPage from "./error/ErrorPage";
+import SettingPage from "./setting/SettingPage";
 
-export {RootPage, RegisterPage, LoginPage, ResetPasswordPage}
+export {RootPage, RegisterPage, LoginPage, ResetPasswordPage, ErrorPage, SettingPage}

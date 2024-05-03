@@ -51,7 +51,7 @@ const ForgotPasswordModal = ({ targetEmail }) => {
     <>
       <button
         type="button"
-        className="w-fit text-[#09090b] font-semibold text-xs h-fit hover:underline"
+        className="w-fit text-[#09090b] dark:text-slate-300 font-semibold text-xs h-fit hover:underline"
         onClick={handleDialogTrigger}
       >
         Forgot password?
@@ -60,7 +60,7 @@ const ForgotPasswordModal = ({ targetEmail }) => {
         <DialogTrigger asChild>
           <button ref={forgotPasswordRef}></button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] dark:bg-[#09090b]">
           <DialogHeader className="p-0 pb-2">
             <DialogTitle className="text-lg">Email verification</DialogTitle>
             <DialogDescription>

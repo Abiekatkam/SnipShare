@@ -1,16 +1,31 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { LoginPage, RegisterPage, ResetPasswordPage, RootPage } from "./pages";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { ErrorPage, LoginPage, RegisterPage, ResetPasswordPage, RootPage, SettingPage } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 
+const isRouteInList = (currentPath) => {
+  const routeList = ["/","/explore","/notifications","/messages","/settings","/profile","/login","/register"]
+
+  return routeList.some(route => {
+    if (route.includes(':')) {
+      const regex = new RegExp(`^${route.replace(/:\w+/g, '\\w+')}$`);
+      return regex.test(currentPath);
+    }
+    return route === currentPath;
+  });
+}
+
 const App = () => {
+  const location = useLocation().pathname;
   const authUser = true;
+  const isValidRoute = isRouteInList(location)
+
   return (
-    <>
+    <main className="dark:bg-[#09090b]">
       <div className="flex max-w-[1340px] mx-auto">
-        {authUser && <Sidebar />}
+        {authUser && isValidRoute && <Sidebar />}
         <Routes>
           <Route
             path="/"
@@ -25,12 +40,12 @@ const App = () => {
             element={authUser ? <RootPage /> : <Navigate to="/register" />}
           />
           <Route
-            path="/message"
+            path="/messages"
             element={authUser ? <RootPage /> : <Navigate to="/register" />}
           />
           <Route
-            path="/setting"
-            element={authUser ? <RootPage /> : <Navigate to="/register" />}
+            path="/settings"
+            element={authUser ? <SettingPage /> : <Navigate to="/register" />}
           />
           <Route
             path="/profile"
@@ -46,12 +61,16 @@ const App = () => {
           />
           <Route
             path="/reset-password"
-            element={!authUser ? <ResetPasswordPage /> : <Navigate to="/" />}
+            element={<ResetPasswordPage />}
+          />
+          <Route
+            path="/*"
+            element={<ErrorPage />}
           />
         </Routes>
       </div>
       <ToastContainer />
-    </>
+    </main>
   );
 };
 

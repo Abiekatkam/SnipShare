@@ -1,18 +1,20 @@
-import { CopyrightYear } from "@/components/constants/Urls";
-import { PromotionSocialLinks } from "@/components/constants/Utility";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   FaGithub,
+  FaGoogle,
   FaInstagram,
   FaLinkedin,
   FaXTwitter,
 } from "@/components/constants/Icons";
-import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
 
-const ResetPasswordPage = () => {
+import { Link } from "react-router-dom";
+import { CopyrightYear } from "@/components/constants/Urls";
+import { PromotionSocialLinks } from "@/components/constants/Utility";
+import RegistrationForm from "@/components/forms/RegistrationForm";
+
+const RegisterPage = () => {
   return (
     <main className="m-auto flex lg:h-[100vh] h-fit w-full flex-col items-center justify-center pl-2 pr-2">
       <div className="m-auto flex w-fit flex-col lg:flex-row justify-center lg:gap-3 lg:p-6 p-2 sm:p-10">
@@ -41,7 +43,7 @@ const ResetPasswordPage = () => {
                 >
                   <Button
                     variant="outline"
-                    className="lg:h-9 lg:w-9 h-8 w-8 p-2"
+                    className="lg:h-9 lg:w-9 h-8 w-8 p-2 dark:bg-transparent"
                   >
                     {links.name === "Linkedin" && (
                       <FaLinkedin className="w-[25px] h-[25px]" />
@@ -62,8 +64,36 @@ const ResetPasswordPage = () => {
           </div>
         </div>
         <div className="lg:w-[480px] w-full flex flex-col items-center justify-start lg:p-4 lg:pl-6 lg:ml-10">
-          <h2 className="lg:text-2xl font-semibold text-lg">Reset Password</h2>
-          <ResetPasswordForm />
+          <h2 className="lg:text-2xl font-semibold text-lg">
+            Create an account
+          </h2>
+          <RegistrationForm />
+
+          <p className="lg:w-[80%] w-[90%] text-xs mt-3 font-semibold text-slate-600 dark:text-slate-400">
+            Already a user?{" "}
+            <Link to="/login" className="text-[#09090b] hover:underline dark:text-slate-300">
+              Login here.
+            </Link>{" "}
+          </p>
+
+          <Separator className="lg:my-5 my-3 bg-slate-950/50 dark:bg-slate-300" />
+
+          <div className="w-full my-3 lg:my-0 flex flex-col lg:flex-row items-center justify-center gap-3">
+            <Button
+              variant="outline"
+              className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm dark:bg-transparent"
+            >
+              <FaGoogle className="lg:w-[25px] lg:h-[25px]" />{" "}
+              <span className="lg:hidden ml-2"> Continue with Google</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm dark:bg-transparent"
+            >
+              <FaGithub className="lg:w-[25px] lg:h-[25px]" />{" "}
+              <span className="lg:hidden ml-2"> Continue with Github</span>
+            </Button>
+          </div>
 
           <div className="w-full lg:hidden my-4 flex flex-col items-center justify-center text-center">
             <p className="text-xs lg:text-md font-normal">
@@ -80,7 +110,7 @@ const ResetPasswordPage = () => {
                 >
                   <Button
                     variant="outline"
-                    className="lg:h-9 lg:w-9 h-8 w-8 p-2"
+                    className="lg:h-9 lg:w-9 h-8 w-8 p-2 dark:bg-transparent"
                   >
                     {links.name === "Linkedin" && (
                       <FaLinkedin className="w-[25px] h-[25px]" />
@@ -105,4 +135,4 @@ const ResetPasswordPage = () => {
   );
 };
 
-export default ResetPasswordPage;
+export default RegisterPage;

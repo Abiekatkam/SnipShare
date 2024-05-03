@@ -42,7 +42,7 @@ const LoginPage = () => {
                 >
                   <Button
                     variant="outline"
-                    className="lg:h-9 lg:w-9 h-8 w-8 p-2"
+                    className="lg:h-9 lg:w-9 h-8 w-8 p-2 dark:bg-transparent"
                   >
                     {links.name === "Linkedin" && (
                       <FaLinkedin className="w-[25px] h-[25px]" />
@@ -66,19 +66,19 @@ const LoginPage = () => {
           <h2 className="lg:text-3xl font-semibold text-lg">Welcome back!</h2>
           <LoginForm />
 
-          <Separator className="lg:my-5 my-3 bg-slate-950/50" />
+          <Separator className="lg:my-5 my-3 bg-slate-950/50 dark:bg-slate-300" />
 
           <div className="w-full my-3 lg:my-0 flex flex-col lg:flex-row items-center justify-center gap-3">
             <Button
               variant="outline"
-              className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm"
+              className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm dark:bg-transparent"
             >
               <FaGoogle className="lg:w-[25px] lg:h-[25px]" />{" "}
               <span className="lg:hidden ml-2"> Continue with Google</span>
             </Button>
             <Button
               variant="outline"
-              className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm"
+              className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm dark:bg-transparent"
             >
               <FaGithub className="lg:w-[25px] lg:h-[25px]" />{" "}
               <span className="lg:hidden ml-2"> Continue with Github</span>
@@ -100,7 +100,7 @@ const LoginPage = () => {
                 >
                   <Button
                     variant="outline"
-                    className="lg:h-9 lg:w-9 h-8 w-8 p-2"
+                    className="lg:h-9 lg:w-9 h-8 w-8 p-2 dark:bg-transparent"
                   >
                     {links.name === "Linkedin" && (
                       <FaLinkedin className="w-[25px] h-[25px]" />
