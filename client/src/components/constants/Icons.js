@@ -10,10 +10,12 @@ import {
   FaRegEye,
   FaRegEyeSlash,
   FaGear,
+  FaRegFaceSmile,
 } from "react-icons/fa6";
 import { FaHome, FaSearch, FaBell, FaRegUser } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
 import { SunIcon, MoonIcon } from "lucide-react";
+import { IoImageOutline, IoClose } from "react-icons/io5";
 
 export {
   FaGoogle,
@@ -33,5 +35,9 @@ export {
   FaGear,
   MdOutlineMail,
   LuLogOut,
-  SunIcon, MoonIcon
+  SunIcon,
+  MoonIcon,
+  IoImageOutline,
+  IoClose,
+  FaRegFaceSmile,
 };

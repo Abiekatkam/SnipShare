@@ -15,8 +15,8 @@ const BlockedAccount = () => {
             <p className='text-sm text-slate-500 dark:text-slate-300'>
             Here is a list of users you've chosen to block. Take control of your online experience by managing your blocked list.
             </p>
-          <AccountSmCard/>
-          <AccountSmCard/>
+          <AccountSmCard type={"unblock"}/>
+          <AccountSmCard type={"unblock"}/>
         </div>
       </CardContent>
     </Card>

@@ -52,7 +52,6 @@ const siderbarlinks = [
 
 const Sidebar = () => {
   const pathname = useLocation().pathname;
-  console.log(pathname);
   return (
     <div className="md:flex-[2_2_0] w-20 max-w-72 border-r border-slate-300 dark:border-slate-500">
       <div className="sticky top-0 left-0 h-screen flex flex-col w-20 md:w-full p-4">
