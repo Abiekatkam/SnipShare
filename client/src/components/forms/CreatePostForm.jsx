@@ -1,16 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import Avatar from "../../../public/avatar-placeholder.png";
+import Avatar from "/avatar-placeholder.png";
 import { Separator } from "../ui/separator";
-import {
-  IoImageOutline,
-  IoClose,
-  FaRegFaceSmile,
-} from "@/components/constants/Icons";
+import { IoImageOutline, IoClose } from "@/components/constants/Icons";
 import SpinLoader from "../loaders/SpinLoader";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import "emoji-picker-element";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { BiError } from "react-icons/bi";
 
 const CreatePostForm = () => {
   const [formState, setFormState] = useState({
@@ -18,7 +14,10 @@ const CreatePostForm = () => {
   });
   const [source, setSource] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const maxDescriptionLength = 280;
+  const [isTruncateMessage, setIsTruncateMessage] = useState(false);
+  const [isValidFeed, setIsValidFeed] = useState(false);
+
+  const maxDescriptionLength = 250;
   const remainingChars = maxDescriptionLength - formState.description.length;
 
   const handleInputStateChange = (e) => {
@@ -54,12 +53,21 @@ const CreatePostForm = () => {
     setPreviewUrl(null);
   };
 
-  const handleEmojiClick = (event, emojiObject) => {
-    setFormState((prevFormState) => ({
-      ...prevFormState,
-      description: prevFormState.description + emojiObject.emoji,
-    }));
-  };
+  useEffect(() => {
+    if (remainingChars <= 0) {
+      setIsTruncateMessage(true);
+    } else {
+      setIsTruncateMessage(false);
+    }
+  }, [remainingChars]);
+
+  useEffect(() => {
+    if (formState.description.length >= 3 || source != null) {
+      setIsValidFeed(true);
+    } else {
+      setIsValidFeed(false);
+    }
+  }, [formState.description, source]);
 
   return (
     <form
@@ -125,23 +133,25 @@ const CreatePostForm = () => {
           >
             <IoImageOutline />
           </button>
-          <Popover>
-            <PopoverTrigger>
-              <button className="w-8 h-8 text-xl flex items-center justify-center text-slate-600 dark:text-slate-400 dark:hover:text-slate-50 hover:text-slate-800 transition-all ease-in duration-200">
-                <FaRegFaceSmile />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-fit p-0">
-              <emoji-picker emoji-version="15.0" onClick={handleEmojiClick}></emoji-picker>
-            </PopoverContent>
-          </Popover>
         </div>
         <div className="w-fit flex items-center gap-3">
-          <p className="text-[#09090b] dark:text-white font-semibold">
-            {remainingChars}{" "}
-            <span className="font-normal">characters left</span>
-          </p>
-          <Button className="h-9 font-semibold" disabled={loader}>
+          {isTruncateMessage ? (
+            <Alert variant="destructive" className="p-2">
+              <AlertDescription>
+                <BiError className="h-4 w-4" />
+                Not more than {maxDescriptionLength} characters are allowed.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <p className="text-[#09090b] dark:text-white font-semibold">
+              {remainingChars}{" "}
+              <span className="font-normal">characters left</span>
+            </p>
+          )}
+          <Button
+            className="h-9 font-semibold"
+            disabled={loader || isTruncateMessage || !isValidFeed}
+          >
             {loader ? <SpinLoader /> : "Post"}
           </Button>
         </div>

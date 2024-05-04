@@ -21,6 +21,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "emoji-picker-element": "^1.21.3",
+    "emoji-picker-react": "^4.9.2",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.376.0",
     "react": "^18.2.0",
