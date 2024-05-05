@@ -230,3 +230,45 @@ export const authForgotPassword = async (req, res) => {
     });
   }
 };
+
+export const authResetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "No user found",
+      });
+    }
+
+    if (password.length < 8 || password.length >= 17) {
+      return res.status(400).json({
+        status: "error",
+        message: "Password length should more than 8 and less than 17",
+      });
+    }
+    // hashing password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+
+    user = await user.save();
+    user.password = null;
+    return res.status(200).json({
+      status: "success",
+      message: "Password updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.log(
+      `authResetPassword Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};

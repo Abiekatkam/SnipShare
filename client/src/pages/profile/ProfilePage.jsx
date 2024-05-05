@@ -17,7 +17,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      <WhoToFollow />
+      <WhoToFollow isHomePage={true} />
     </>
   );
 };

@@ -5,6 +5,7 @@ import {
   authLogin,
   authLogout,
   authRegister,
+  authResetPassword,
 } from "../controllers/auth.controllers.js";
 import { restrictedRoute } from "../utility/middleware/restrictedRoute.js";
 
@@ -20,5 +21,7 @@ router.post("/logout", authLogout);
 router.get("/current-user", restrictedRoute, authCurrentUser);
 // auth forgot password route
 router.post("/forgot-password", authForgotPassword);
+// auth reset password route
+router.post("/reset-password", authResetPassword);
 
 export default router;

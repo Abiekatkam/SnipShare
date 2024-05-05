@@ -69,6 +69,7 @@ const ForgotPasswordModal = ({ targetEmail }) => {
   const handleVerifyOtp = () => {
     if (otpValue != "" && otpValue.length == 6) {
       if (getOtp == otpValue) {
+        localStorage.setItem("temp-email", targetEmail);
         navigate("/reset-password");
       } else {
         toast.error("OTP didn't matched");
