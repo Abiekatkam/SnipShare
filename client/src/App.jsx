@@ -57,7 +57,7 @@ const App = () => {
           throw new Error(responseData.message || "Something went wrong!");
         }
         if (responseData.status == "success") {
-          return responseData;
+          return responseData?.data;
         }
       } catch (error) {
         throw new Error(error.message);

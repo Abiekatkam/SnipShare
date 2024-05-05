@@ -17,28 +17,64 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ForgotPasswordModal = ({ targetEmail }) => {
   const [isEmailValid, setIsEmailValid] = useState(false);
+  const [getOtp, setGetOtp] = useState("");
   const [otpValue, setOtpValue] = useState("");
 
   const forgotPasswordRef = useRef(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const handleDialogTrigger = () => {
+  const handleDialogTrigger = async () => {
     if (isEmailValid) {
+      ForgotPasswordMutation({ email: targetEmail });
       forgotPasswordRef.current.click();
     } else {
       toast.error("Please enter a valid email address");
     }
   };
-  
+
+  const { mutate: ForgotPasswordMutation, isPending } = useMutation({
+    mutationFn: async ({ email }) => {
+      try {
+        const response = await fetch("/api/auth/forgot-password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        if (data.status == "error") {
+          return toast.error(data.message);
+        }
+
+        if (data.status == "success") {
+          queryClient.invalidateQueries({
+            queryKey: ["authorisedCurrentUser"],
+          });
+          setGetOtp(data.data?.resetpasswordOtp);
+          toast.success(data.message);
+        }
+        return data;
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+  });
 
   const handleVerifyOtp = () => {
-    if(otpValue != "" && otpValue.length == 6){
-        navigate("/reset-password")
-    }else{
-        toast.error("OTP didn't matched. Please enter a valid OTP.")
+    if (otpValue != "" && otpValue.length == 6) {
+      if (getOtp == otpValue) {
+        navigate("/reset-password");
+      } else {
+        toast.error("OTP didn't matched");
+      }
+    } else {
+      toast.error("OTP didn't matched. Please enter a valid OTP.");
     }
   };
 
@@ -69,7 +105,11 @@ const ForgotPasswordModal = ({ targetEmail }) => {
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-center gap-4">
-            <InputOTP maxLength={6} value={otpValue} onChange={(value) => setOtpValue(value)}>
+            <InputOTP
+              maxLength={6}
+              value={otpValue}
+              onChange={(value) => setOtpValue(value)}
+            >
               <InputOTPGroup>
                 <InputOTPSlot index={0} className="h-9 w-9" />
                 <InputOTPSlot index={1} className="h-9 w-9" />

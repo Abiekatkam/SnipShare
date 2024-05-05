@@ -10,7 +10,7 @@ import {
   LuLogOut,
 } from "@/components/constants/Icons";
 import SidebarLinks from "./SidebarLinks";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 const siderbarlinks = [
@@ -82,6 +82,10 @@ const Sidebar = () => {
     },
   });
 
+  const { data: authenticatedUser } = useQuery({
+    queryKey: ["authorisedCurrentUser"],
+  });
+
   return (
     <div className="md:flex-[2_2_0] w-20 max-w-72 border-r border-slate-300 dark:border-slate-500">
       <div className="sticky top-0 left-0 h-screen flex flex-col w-20 md:w-full p-4">
@@ -107,13 +111,15 @@ const Sidebar = () => {
         <div className="mt-auto w-full flex items-center justify-between gap-3 rounded-xl p-2 px-3 font-semibold text-lg tracking-wide dark:text-white transition-all bg-slate-200 text-[#09090b] ease-in dark:bg-[#27272a]">
           <div className="w-fit flex items-center gap-2">
             <img
-              src="https://pbs.twimg.com/profile_images/1564549161974112256/OU_vwEqS_400x400.jpg"
+              src={authenticatedUser.profileImage || "/avatar-placeholder.png"}
               alt=""
               className="w-10 h-10 rounded-full object-contain"
             />
             <div className="w-fit h-full flex flex-col items-start">
-              <h1 className="text-sm">Abhishek Katkam</h1>
-              <p className="text-xs text-slate-500">@abhishekkatkam09</p>
+              <h1 className="text-sm">{authenticatedUser.fullname}</h1>
+              <p className="text-xs text-slate-500">
+                @{authenticatedUser.username}
+              </p>
             </div>
           </div>
           <LuLogOut

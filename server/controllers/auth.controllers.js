@@ -1,6 +1,8 @@
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utility/utils/generateTokenAndSetCookie.js";
+import { generateOTP } from "../utility/utils/generateOtp.js";
+import nodemailer from "nodemailer";
 
 export const authRegister = async (req, res) => {
   try {
@@ -154,6 +156,73 @@ export const authCurrentUser = async (req, res) => {
   } catch (error) {
     console.log(
       `authCurrentUser Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const authForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    const generatedOtpCode = generateOTP();
+
+    const EmailTransporter = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      service: false,
+      auth: {
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASSWORD,
+      },
+    });
+    const mailOption = {
+      from: `"Abie Katkam Project SnipShare", <${process.env.NODEMAILER_EMAIL}>`,
+      to: email,
+      subject: "Your One-Time Password (OTP) for Password Reset Request",
+      text: "Password Reset OTP",
+      html: `<h2>Password Reset OTP</h2><br/>
+      <p>Dear ${user.fullname},</p><br/>      
+      <p>Your One-Time Password (OTP) for resetting your password is: <strong>${generatedOtpCode}</strong>.</p>
+      <br/>
+      <p>Please use this OTP to complete the password reset process.</p>
+      <br/>
+      <p>If you did not request a password reset, please ignore this email.</p>
+      <br/>
+      <p>Thank you,<br/> 
+        ${process.env.APPNAME}</p>`,
+    };
+
+    user.resetpasswordOtp = generatedOtpCode;
+
+    const mailResponse = await EmailTransporter.sendMail(mailOption);
+    if (mailResponse.messageId) {
+      user = await user.save();
+      return res.status(200).json({
+        status: "success",
+        message: "OTP sent successfully!",
+        data: user,
+      });
+    } else {
+      return res.status(400).json({
+        status: "error",
+        message: "Failed sending an OTP, please try again.",
+      });
+    }
+  } catch (error) {
+    console.log(
+      `authForgotPassword Controller : Something went wrong. ${error.message}`
     );
     res.status(500).json({
       status: "error",

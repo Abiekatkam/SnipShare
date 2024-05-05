@@ -71,6 +71,7 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    resetpasswordOtp: { type: String },
   },
   { timestamps: true }
 );
