@@ -6,6 +6,7 @@ A simple social media platform using MERN stack and other technologies.
 2. Shadcn ui (for better UI components) [preview site](https://ui.shadcn.com/)
 3. Tailwind Css (CSS purpose) [preview site](https://tailwindcss.com/)
 4. Cloudinary (for image and video processing and storage) [preview site](https://cloudinary.com/)
+5. Nodemailer (for sending gmail messages) [preview site](https://www.nodemailer.com/)
 
 ## Features including in this till now
 1. Authentication with JSONWEBTOKENS (JWT)
