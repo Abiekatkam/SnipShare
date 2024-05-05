@@ -84,8 +84,8 @@ export const authRegister = async (req, res) => {
 
 export const authLogin = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
     const isPasswordValid = await bcrypt.compare(
       password,
       user?.password || ""
@@ -94,7 +94,7 @@ export const authLogin = async (req, res) => {
     if (!isPasswordValid || !user) {
       return res.status(400).json({
         status: "error",
-        message: "Invalid username or password",
+        message: "Invalid email address or password",
       });
     }
 

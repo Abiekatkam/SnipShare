@@ -15,6 +15,8 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "@/components/sidebar/Sidebar";
+import { useQuery } from "@tanstack/react-query";
+import SpinTextLoader from "./components/loaders/SpinTextLoader";
 
 const isRouteInList = (currentPath) => {
   const routeList = [
@@ -25,7 +27,7 @@ const isRouteInList = (currentPath) => {
     "/settings",
     "/profile",
     "/login",
-    "/register",
+    "/login",
   ];
 
   return routeList.some((route) => {
@@ -39,47 +41,95 @@ const isRouteInList = (currentPath) => {
 
 const App = () => {
   const location = useLocation().pathname;
-  const authUser = true;
   const isValidRoute = isRouteInList(location);
+
+  const { data: authorisedCurrentUser, isLoading } = useQuery({
+    queryKey: ["authorisedCurrentUser"],
+    queryFn: async () => {
+      try {
+        const response = await fetch("/api/auth/current-user");
+        const responseData = await response.json();
+        console.log(responseData);
+        if (responseData?.status == "error") {
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error(responseData.message || "Something went wrong!");
+        }
+        if (responseData.status == "success") {
+          return responseData;
+        }
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    retry: false,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center dark:bg-[#09090b] bg-white">
+        <SpinTextLoader />
+      </div>
+    );
+  }
 
   return (
     <main className="dark:bg-[#09090b]">
       <div className="flex max-w-[1340px] mx-auto">
-        {authUser && isValidRoute && <Sidebar />}
+        {authorisedCurrentUser && isValidRoute && <Sidebar />}
         <Routes>
           <Route
             path="/"
-            element={authUser ? <RootPage /> : <Navigate to="/register" />}
+            element={
+              authorisedCurrentUser ? <RootPage /> : <Navigate to="/login" />
+            }
           />
           <Route
             path="/explore"
-            element={authUser ? <ExplorePage /> : <Navigate to="/register" />}
+            element={
+              authorisedCurrentUser ? <ExplorePage /> : <Navigate to="/login" />
+            }
           />
           <Route
             path="/notifications"
             element={
-              authUser ? <NotificationPage /> : <Navigate to="/register" />
+              authorisedCurrentUser ? (
+                <NotificationPage />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
           <Route
             path="/messages"
-            element={authUser ? <MessagePage /> : <Navigate to="/register" />}
+            element={
+              authorisedCurrentUser ? <MessagePage /> : <Navigate to="/login" />
+            }
           />
           <Route
             path="/settings"
-            element={authUser ? <SettingPage /> : <Navigate to="/register" />}
+            element={
+              authorisedCurrentUser ? <SettingPage /> : <Navigate to="/login" />
+            }
           />
           <Route
             path="/profile"
-            element={authUser ? <ProfilePage /> : <Navigate to="/register" />}
+            element={
+              authorisedCurrentUser ? <ProfilePage /> : <Navigate to="/login" />
+            }
           />
           <Route
             path="/login"
-            element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+            element={
+              !authorisedCurrentUser ? <LoginPage /> : <Navigate to="/" />
+            }
           />
           <Route
             path="/register"
-            element={!authUser ? <RegisterPage /> : <Navigate to="/" />}
+            element={
+              !authorisedCurrentUser ? <RegisterPage /> : <Navigate to="/" />
+            }
           />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/*" element={<ErrorPage />} />

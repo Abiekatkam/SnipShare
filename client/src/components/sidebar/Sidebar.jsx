@@ -10,6 +10,8 @@ import {
   LuLogOut,
 } from "@/components/constants/Icons";
 import SidebarLinks from "./SidebarLinks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const siderbarlinks = [
   {
@@ -52,6 +54,34 @@ const siderbarlinks = [
 
 const Sidebar = () => {
   const pathname = useLocation().pathname;
+  const queryClient = useQueryClient();
+
+  const { mutate: LogoutMutation } = useMutation({
+    mutationFn: async () => {
+      try {
+        const response = await fetch("/api/auth/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        if (data.status == "error") {
+          toast.error(data.message);
+        }
+        if (data.status == "success") {
+          queryClient.invalidateQueries({
+            queryKey: ["authorisedCurrentUser"],
+          });
+          toast.success(data.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+  });
+
   return (
     <div className="md:flex-[2_2_0] w-20 max-w-72 border-r border-slate-300 dark:border-slate-500">
       <div className="sticky top-0 left-0 h-screen flex flex-col w-20 md:w-full p-4">
@@ -90,6 +120,7 @@ const Sidebar = () => {
             className="cursor-pointer"
             onClick={(e) => {
               e.preventDefault();
+              LogoutMutation();
             }}
           />
         </div>

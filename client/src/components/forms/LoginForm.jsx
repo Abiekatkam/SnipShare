@@ -4,6 +4,9 @@ import SpinLoader from "@/components/loaders/SpinLoader";
 import { FaRegEyeSlash, FaRegEye } from "@/components/constants/Icons";
 import ForgotPasswordModal from "@/components/modals/ForgotPasswordModal";
 import { Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const LoginForm = () => {
   const [formState, setFormState] = useState({
@@ -12,8 +15,6 @@ const LoginForm = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [inputType, setInputType] = useState("password");
-
-  const loader = false;
 
   const handleInputStateChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
@@ -28,20 +29,55 @@ const LoginForm = () => {
     }, 2000);
   };
 
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: LoginMutation,
+    isError,
+    isPending,
+    error,
+  } = useMutation({
+    mutationFn: async ({ email, password }) => {
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+        if (data.status == "error") {
+          return toast.error(data.message);
+        }
+
+        if (data.status == "success") {
+          queryClient.invalidateQueries({
+            queryKey: ["authorisedCurrentUser"],
+          });
+          toast.success(data.message);
+        }
+        return data;
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+  });
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log(formState);
+    LoginMutation(formState);
   };
 
   return (
     <>
       <form className="lg:w-[80%] w-[90%]" onSubmit={handleFormSubmit}>
         <label className="mb-1 block mt-2 w-full">
-        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
+          <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
             Email Address
           </span>
           <input
-             className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
+            className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
             inputMode="email"
             autoComplete="email"
             autoFocus
@@ -54,12 +90,12 @@ const LoginForm = () => {
           />
         </label>
         <label className="mb-1 block mt-2 w-full">
-        <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
+          <span className="lg:mb-1 block lg:text-sm text-xs font-semibold leading-6 text-slate-700 dark:text-slate-300">
             Password
           </span>
           <div className="relative">
             <input
-               className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
+              className="mt-1 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
               inputMode="password"
               type={inputType}
               name="password"
@@ -81,10 +117,10 @@ const LoginForm = () => {
           </div>
         </label>
         <Button
-            className="w-full mt-4 h-9 font-bold bg-[#09090b] dark:bg-white"
-            disabled={loader}
-          >
-          {loader ? <SpinLoader /> : "Login"}
+          className="w-full mt-4 h-9 font-bold bg-[#09090b] dark:bg-white"
+          disabled={isPending}
+        >
+          {isPending ? <SpinLoader /> : "Login"}
         </Button>
       </form>
 
@@ -92,7 +128,10 @@ const LoginForm = () => {
         <ForgotPasswordModal targetEmail={formState.email} />
         <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
           Don't have an account?{" "}
-          <Link to="/register" className="text-[#09090b] hover:underline dark:text-slate-300">
+          <Link
+            to="/register"
+            className="text-[#09090b] hover:underline dark:text-slate-300"
+          >
             Register here.
           </Link>{" "}
         </p>
