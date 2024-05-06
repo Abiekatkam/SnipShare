@@ -53,15 +53,15 @@ const RegistrationForm = () => {
         }
         const data = await response.json();
         if (data.status == "error") {
-          toast.error(data.message);
+          return toast.error(data.message);
         }
-      } catch (error) {
+        if(data.status == "success"){
+          toast.success("Account created successfully");
+          navigate("/login");
+        }
+      }catch (error) {
         toast.error(error.message);
       }
-    },
-    onSuccess: () => {
-      toast.success("Account created successfully");
-      navigate("/login");
     },
   });
 

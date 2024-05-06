@@ -31,7 +31,6 @@ const ForgotPasswordModal = ({ targetEmail }) => {
   const handleDialogTrigger = async () => {
     if (isEmailValid) {
       ForgotPasswordMutation({ email: targetEmail });
-      forgotPasswordRef.current.click();
     } else {
       toast.error("Please enter a valid email address");
     }
@@ -56,6 +55,7 @@ const ForgotPasswordModal = ({ targetEmail }) => {
           queryClient.invalidateQueries({
             queryKey: ["authorisedCurrentUser"],
           });
+          forgotPasswordRef.current.click();
           setGetOtp(data.data?.resetpasswordOtp);
           toast.success(data.message);
         }

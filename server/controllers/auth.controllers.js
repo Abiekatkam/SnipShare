@@ -93,6 +93,12 @@ export const authLogin = async (req, res) => {
       user?.password || ""
     );
 
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "No user found with this email address. Please register yourself.",
+      });
+    }
     if (!isPasswordValid || !user) {
       return res.status(400).json({
         status: "error",
@@ -265,6 +271,90 @@ export const authResetPassword = async (req, res) => {
   } catch (error) {
     console.log(
       `authResetPassword Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const authChangePassword = async (req, res) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+    let user = await User.findOne({ email });
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user?.password || ""
+    );
+
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "No user found",
+      });
+    }
+
+    if (newPassword.length < 8 || newPassword.length >= 17) {
+      return res.status(400).json({
+        status: "error",
+        message: "Password length should more than 8 and less than 17",
+      });
+    }
+    
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        status: "error",
+        message: "Current password didn't matched. Please enter a valid password",
+      });
+    }
+
+    // hashing password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+
+    user = await user.save();
+    user.password = null;
+    return res.status(200).json({
+      status: "success",
+      message: "Password updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.log(
+      `authChangePassword Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const authChangePrivacy = async (req, res) => {
+  try {
+    const { email, isAccountPrivate } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "No user found",
+      });
+    }
+    user.isAccountPrivate = isAccountPrivate;
+
+    user = await user.save();
+    user.password = null;
+    return res.status(200).json({
+      status: "success",
+      message: "Account privacy changed successfully",
+      data: user,
+    });
+  } catch (error) {
+    console.log(
+      `authChangePrivacy Controller : Something went wrong. ${error.message}`
     );
     res.status(500).json({
       status: "error",

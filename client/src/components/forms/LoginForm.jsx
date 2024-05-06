@@ -6,7 +6,6 @@ import ForgotPasswordModal from "@/components/modals/ForgotPasswordModal";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const LoginForm = () => {
   const [formState, setFormState] = useState({
