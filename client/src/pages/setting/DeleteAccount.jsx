@@ -15,11 +15,76 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import React from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const DeleteAccount = () => {
-  const loading = false;
+  const [formState, setFormState] = useState({
+    email: ""
+  })
+  const [isValidDelete, setIsValidDelete] = useState(true);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data: authenticatedUser } = useQuery({
+    queryKey: ["authorisedCurrentUser"],
+  });
+
+  const handleFormStateChange = (e) => {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (formState.email !== authenticatedUser.email) {
+      return toast.error("Email address didn't matched. Please enter a valid email");
+    }
+    if (
+      formState.email === authenticatedUser.email
+    ) {
+      DeleteAccountMutation({
+       email:formState.email
+      });
+    }
+  };
+
+  const { mutate: DeleteAccountMutation, isPending } = useMutation({
+    mutationFn: async ({ email }) => {
+      try {
+        const response = await fetch("/api/users/delete-profile", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        if (data.status == "error") {
+          return toast.error(data.message);
+        }
+
+        if (data.status == "success") {
+          queryClient.invalidateQueries({
+            queryKey: ["authorisedCurrentUser"],
+          });
+          toast.success(data.message);
+          navigate("/login")
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+  });
+
+  useEffect(()=>{
+    if(formState.email == authenticatedUser.email){
+      setIsValidDelete(false)
+    }else{
+      setIsValidDelete(true)
+    }
+  },[formState.email])
+
   return (
     <Card className="w-full border border-red-600 dark:bg-[#09090b]">
       <CardHeader className="border-b border-border p-4 pb-2">
@@ -59,19 +124,20 @@ const DeleteAccount = () => {
               className="mt-2 block lg:h-9 h-8 w-full appearance-none rounded-md bg-white dark:bg-[#09090b] px-3 text-sm  shadow-sm ring-1 ring-gray-400 dark:ring-gray-600 placeholder:text-slate-400 focus:outline-none focus:ring-2 placeholder:italic focus:ring-gray-900 dark:focus:ring-gray-300"
               type="email"
               required
+              autoComplete="off"
               placeholder="email-address@gmail.com"
-              // onChange={(event) => {
-              // 	setVerify(event.target.value);
-              // }}
+              name="email"
+              value={formState.email}
+              onChange={handleFormStateChange}
             />
             <DialogFooter>
               <Button
-                // onClick={onDelete}
+                onClick={handleFormSubmit}
                 variant={"destructive"}
-                // disabled={loading || verify !== user.email}
+                disabled={isPending || isValidDelete}
                 className="user-select-none mt-4 w-full"
               >
-                {loading ? <SpinLoader /> : "Confirm delete"}
+                {isPending ? <SpinLoader /> : "Confirm delete"}
               </Button>
             </DialogFooter>
           </DialogContent>

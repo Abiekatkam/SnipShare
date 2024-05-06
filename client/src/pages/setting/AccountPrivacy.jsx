@@ -51,7 +51,7 @@ const AccountPrivacy = () => {
           },
           body: JSON.stringify({
             email: authenticatedUser.email,
-            isAccountPrivate
+            isAccountPrivate: isAccountPrivate
           }),
         });
         const data = await response.json();

@@ -245,3 +245,43 @@ export const userUpdateProfile = async (req, res) => {
     });
   }
 };
+
+export const userDeleteProfile = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({email});
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+   
+    await User.updateMany(
+      { followings: user._id },
+      { $pull: { followings: user._id } }
+    );
+
+    await User.updateMany(
+      { followers: user._id },
+      { $pull: { followers: user._id } }
+    );
+
+    await User.findByIdAndDelete(user._id)
+
+    return res.status(201).json({
+      status: "success",
+      message: "Account deleted successfully!",
+    });
+
+  } catch (error) {
+    console.log(
+      `userDeleteProfile Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
