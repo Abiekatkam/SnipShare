@@ -22,7 +22,7 @@ const ChangePasswordForm = () => {
   const [inputTypeConfirmPassword, setInputTypeConfirmPassword] =
     useState("password");
 
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const handleInputStateChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
@@ -97,7 +97,11 @@ const ChangePasswordForm = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email: authenticatedUser.email, currentPassword, newPassword }),
+          body: JSON.stringify({
+            email: authenticatedUser.email,
+            currentPassword,
+            newPassword,
+          }),
         });
         const data = await response.json();
         if (data.status == "error") {
@@ -112,7 +116,7 @@ const ChangePasswordForm = () => {
             currentpassword: "",
             newpassword: "",
             confirmpassword: "",
-          })
+          });
           toast.success(data.message);
         }
         return data;
