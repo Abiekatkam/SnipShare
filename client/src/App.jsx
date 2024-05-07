@@ -49,7 +49,7 @@ const App = () => {
       try {
         const response = await fetch("/api/auth/current-user");
         const responseData = await response.json();
-        console.log(responseData);
+        console.log(responseData)
         if (responseData?.status == "error") {
           return null;
         }
@@ -75,7 +75,7 @@ const App = () => {
   }
 
   return (
-    <main className="dark:bg-[#09090b]">
+    <main className="dark:bg-[#09090b] selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
       <div className="flex max-w-[1340px] mx-auto">
         {authorisedCurrentUser && isValidRoute && <Sidebar />}
         <Routes>

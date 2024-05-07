@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   FaGithub,
   FaInstagram,
@@ -15,25 +14,24 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { FaLinkedinIn } from "react-icons/fa6";
 
 const ProfilePageLinks = () => {
   const { data: authenticatedUser } = useQuery({
     queryKey: ["authorisedCurrentUser"],
   });
 
-  const isLinkUrlPresent = (authenticatedUser.websiteurl = !"" ? true : false);
-  const isGithubUrlPresent = (authenticatedUser.githuburl = !"" ? true : false);
-  const isFacebookUrlPresent = (authenticatedUser.facebookurl = !""
+  const isLinkUrlPresent = (authenticatedUser.websiteurl ? true : false);
+  const isGithubUrlPresent = (authenticatedUser.githuburl ? true : false);
+  const isFacebookUrlPresent = (authenticatedUser.facebookurl
     ? true
     : false);
-  const isLinkedinUrlPresent = (authenticatedUser.linkedinurl = !""
+  const isLinkedinUrlPresent = (authenticatedUser.linkedinurl
     ? true
     : false);
-  const isInstagramUrlPresent = (authenticatedUser.instagramurl = !""
+  const isInstagramUrlPresent = (authenticatedUser.instagramurl
     ? true
     : false);
-  const isTwitterUrlPresent = (authenticatedUser.twitterurl = !""
+  const isTwitterUrlPresent = (authenticatedUser.twitterurl
     ? true
     : false);
 
@@ -43,13 +41,13 @@ const ProfilePageLinks = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                to={authenticatedUser?.websiteurl}
+              <a
+                href={authenticatedUser?.websiteurl}
                 className="text-lg text-slate-700 dark:text-slate-400 hover:opacity-70"
                 target="_blank"
               >
                 <FaLink />
-              </Link>
+              </a>
             </TooltipTrigger>
             <TooltipContent className="p-2 dark:bg-[#09090b]">
               <p>Professional Link</p>
@@ -61,13 +59,13 @@ const ProfilePageLinks = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                to={authenticatedUser?.linkedinurl}
+              <a
+                href={authenticatedUser?.linkedinurl}
                 className="text-lg text-slate-700 dark:text-slate-400 hover:opacity-70"
                 target="_blank"
               >
-                <FaLinkedinIn />
-              </Link>
+                <FaLinkedin />
+              </a>
             </TooltipTrigger>
             <TooltipContent className="p-2 dark:bg-[#09090b]">
               <p>Linkedin Profile</p>
@@ -79,13 +77,13 @@ const ProfilePageLinks = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                to={authenticatedUser?.twitterurl}
+              <a
+                href={authenticatedUser?.twitterurl}
                 className="text-md text-slate-700 dark:text-slate-400 hover:opacity-70"
                 target="_blank"
               >
                 <FaXTwitter />
-              </Link>
+              </a>
             </TooltipTrigger>
             <TooltipContent className="p-2 dark:bg-[#09090b]">
               <p>Twitter Profile</p>
@@ -97,13 +95,13 @@ const ProfilePageLinks = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                to={authenticatedUser?.githuburl}
+              <a
+                href={authenticatedUser?.githuburl}
                 className="text-lg text-slate-700 dark:text-slate-400 hover:opacity-70"
                 target="_blank"
               >
                 <FaGithub />
-              </Link>
+              </a>
             </TooltipTrigger>
             <TooltipContent className="p-2 dark:bg-[#09090b]">
               <p>Github Profile</p>
@@ -115,13 +113,13 @@ const ProfilePageLinks = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                to={authenticatedUser?.facebookurl}
+              <a
+                href={authenticatedUser?.facebookurl}
                 className="text-lg text-slate-700 dark:text-slate-400 hover:opacity-70"
                 target="_blank"
               >
                 <FaFacebook />
-              </Link>
+              </a>
             </TooltipTrigger>
             <TooltipContent className="p-2 dark:bg-[#09090b]">
               <p>Facebook Profile</p>
@@ -133,13 +131,13 @@ const ProfilePageLinks = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                to={authenticatedUser?.instagramurl}
+              <a
+                href={authenticatedUser?.instagramurl}
                 className="text-md text-slate-700 dark:text-slate-400 hover:opacity-70"
                 target="_blank"
               >
                 <FaInstagram />
-              </Link>
+              </a>
             </TooltipTrigger>
             <TooltipContent className="p-2 dark:bg-[#09090b]">
               <p>Instagram Profile</p>

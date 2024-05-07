@@ -30,7 +30,6 @@ const CreatePostForm = () => {
 
   const imageFileInputRef = useRef(null);
   const loader = false;
-  const theme = localStorage.getItem("vite-ui-theme");
 
   const handleImageFileClick = () => {
     imageFileInputRef.current.click();

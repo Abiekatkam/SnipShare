@@ -91,7 +91,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground open-sans;   
+    @apply bg-background text-foreground open-sans  selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black;   
   }
 }
 

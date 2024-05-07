@@ -2,6 +2,7 @@ import User from "../models/user.models.js";
 import Notification from "../models/notification.models.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
+import { isValidUsername } from "../utility/utils/validUsername.js";
 
 export const userGetUserProfile = async (req, res) => {
   const { username } = req.params;
@@ -114,7 +115,7 @@ export const userGetSuggestedProfile = async (req, res) => {
       (user) => !userFollowedByMe.followings.includes(user._id)
     );
 
-    const suggestedUser = filteredUser.slice(0, 4);
+    const suggestedUser = filteredUser.slice(0, 5);
     suggestedUser.forEach((user) => (user.password = null));
 
     res.status(200).json({
@@ -132,12 +133,9 @@ export const userGetSuggestedProfile = async (req, res) => {
 };
 
 export const userUpdateProfile = async (req, res) => {
-  const {
+  let {
     fullname,
     username,
-    email,
-    currentPassword,
-    newPassword,
     bio,
     websiteurl,
     facebookurl,
@@ -145,14 +143,14 @@ export const userUpdateProfile = async (req, res) => {
     twitterurl,
     githuburl,
     instagramurl,
+    profileImage,
+    coverImage,
   } = req.body;
-
-  let { profileImage, coverImage } = req.body;
 
   const userId = req.user._id;
 
   try {
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
     if (!user) {
       return res.status(400).json({
         status: "error",
@@ -160,38 +158,33 @@ export const userUpdateProfile = async (req, res) => {
       });
     }
 
-    if (
-      (!newPassword && currentPassword) ||
-      (!currentPassword && newPassword)
-    ) {
+    if (!isValidUsername(username)) {
       return res.status(400).json({
         status: "error",
-        message: "Please provide both current password and new password.",
+        message: "Username is should only contains numbers and letters",
       });
     }
 
-    if (currentPassword && newPassword) {
-      const isMatched = await bcrypt.compare(currentPassword, user.password);
-      if (!isMatched) {
-        return res.status(400).json({
-          status: "error",
-          message: "Current passowrd does not matched",
-        });
-      }
-
-      if (newPassword < 8 || newPassword >= 17) {
-        return res.status(400).json({
-          status: "error",
-          message:
-            "New passowrd must be at least 8 characters long and less than 17",
-        });
-      }
-
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(newPassword, salt);
+    if (username.length <= 4) {
+      return res.status(400).json({
+        status: "error",
+        message: "Username cannot be too short, try another usernames.",
+      });
     }
 
-    if (profileImage) {
+    const uniqueUser = await User.findOne({ username });
+    if (uniqueUser) {
+      if (user._id.toString() !== uniqueUser._id.toString()) {
+        if (uniqueUser) {
+          return res.status(400).json({
+            status: "error",
+            message: "Username is already taken",
+          });
+        }
+      }
+    }
+
+    if (user.profileImage !== profileImage) {
       if (user.profileImage) {
         await cloudinary.uploader.destroy(
           user.profileImage.split("/").pop().split(".")[0]
@@ -203,7 +196,7 @@ export const userUpdateProfile = async (req, res) => {
       profileImage = updateProfileImageResponse.secure_url;
     }
 
-    if (coverImage) {
+    if (user.coverImage !== coverImage) {
       if (user.coverImage) {
         await cloudinary.uploader.destroy(
           user.coverImage.split("/").pop().split(".")[0]
@@ -216,7 +209,6 @@ export const userUpdateProfile = async (req, res) => {
     }
 
     user.fullname = fullname || user.fullname;
-    user.email = email || user.email;
     user.username = username || user.username;
     user.bio = bio || user.bio;
     user.websiteurl = websiteurl || user.websiteurl;
@@ -249,7 +241,7 @@ export const userUpdateProfile = async (req, res) => {
 export const userDeleteProfile = async (req, res) => {
   const { email } = req.body;
   try {
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({
         status: "error",
@@ -257,7 +249,6 @@ export const userDeleteProfile = async (req, res) => {
       });
     }
 
-   
     await User.updateMany(
       { followings: user._id },
       { $pull: { followings: user._id } }
@@ -268,13 +259,12 @@ export const userDeleteProfile = async (req, res) => {
       { $pull: { followers: user._id } }
     );
 
-    await User.findByIdAndDelete(user._id)
+    await User.findByIdAndDelete(user._id);
 
     return res.status(201).json({
       status: "success",
       message: "Account deleted successfully!",
     });
-
   } catch (error) {
     console.log(
       `userDeleteProfile Controller : Something went wrong. ${error.message}`

@@ -24,6 +24,7 @@ import {
 import { MdOutlineMail } from "react-icons/md";
 import { SunIcon, MoonIcon } from "lucide-react";
 import { IoImageOutline, IoClose } from "react-icons/io5";
+import { TbCameraPlus } from "react-icons/tb";
 
 export {
   FaGoogle,
@@ -51,4 +52,5 @@ export {
   FaRegCalendarAlt,
   FaFacebook,
   FaLink,
+  TbCameraPlus
 };

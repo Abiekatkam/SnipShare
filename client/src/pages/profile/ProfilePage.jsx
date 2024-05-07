@@ -1,9 +1,9 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
-import { Button } from "@/components/ui/button";
 import React from "react";
 import { FaRegCalendarAlt } from "@/components/constants/Icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ProfilePageLinks from "./ProfilePageLinks";
+import EditProfileModal from "@/components/modals/EditProfileModal";
 
 const ProfilePage = () => {
   const queryClient = useQueryClient();
@@ -17,8 +17,7 @@ const ProfilePage = () => {
     authenticatedUser?.facebookurl != "" ||
     authenticatedUser?.instagramurl != "" ||
     authenticatedUser?.linkedinurl != "" ||
-    authenticatedUser?.twitterurl != "" ||
-    true;
+    authenticatedUser?.twitterurl != "";
 
   return (
     <>
@@ -26,30 +25,25 @@ const ProfilePage = () => {
         <div className="w-full h-full flex flex-col items-start">
           <div className="w-full min-h-[400px] flex flex-col items-center justify-between border-b border-slate-300 dark:border-slate-500">
             <div className="w-full h-[200px] relative">
-              <div className="w-full h-full bg-slate-200 dark:bg-slate-600">
+              <div className="w-full h-full bg-slate-200 dark:bg-slate-600 rounded-md">
                 <img
-                  src="https://images.unsplash.com/photo-1528465424850-54d22f092f9d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src={authenticatedUser?.coverImage || "/cover.png"}
                   alt=""
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-md"
                 />
               </div>
               <div className="absolute w-36 h-36 rounded-full bg-slate-400 z-10 -bottom-16 left-6 border-4 border-slate-200 dark:border-slate-300">
                 <img
-                  src="/avatar-placeholder.png"
+                  src={authenticatedUser?.profileImage || "/avatar-placeholder.png"}
                   alt=""
                   className="w-full h-full object-cover rounded-full"
                 />
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              className="w-fit ml-auto my-3 mb-1 h-8 dark:bg-[#09090b]"
-            >
-              Edit Profile
-            </Button>
+            <EditProfileModal/>
 
-            <div className="w-full h-fit min-h-[145px] flex-col flex p-4 mt-2">
+            <div className="w-full h-fit min-h-[125px] flex-col flex p-4 mt-2">
               <div className="w-full flex flex-row items-start justify-between">
                 <div className="w-fit flex flex-col items-start">
                   <h1 className="text-2xl font-bold text-slate-900/80 dark:text-slate-50">
@@ -70,23 +64,23 @@ const ProfilePage = () => {
               {isLinkPresent && <ProfilePageLinks />}
 
               {authenticatedUser?.bio && (
-                <div className="w-full h-fit mt-2 indent-7 text-balance">
+                <div className="w-full h-fit mt-2 indent-7 text-pretty">
                   {authenticatedUser?.bio}
                 </div>
               )}
 
               <div className="w-fit h-fit mt-2 flex flex-row items-start gap-4">
                 <div className="w-fit flex items-center">
-                  <p className="text-sm flex items-center gap-1 dark:text-slate-400">
-                    <span className="font-semibold dark:text-white">
+                  <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                    <span className="font-semibold text-[#09090b] dark:text-white">
                       {authenticatedUser?.followers?.length}
                     </span>{" "}
                     Followers
                   </p>
                 </div>
                 <div className="w-fit flex items-center">
-                  <p className="text-sm flex items-center gap-1 dark:text-slate-400">
-                    <span className="font-semibold dark:text-white">
+                  <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
+                    <span className="font-semibold text-[#09090b] dark:text-white">
                       {authenticatedUser?.followings?.length}
                     </span>{" "}
                     Followings

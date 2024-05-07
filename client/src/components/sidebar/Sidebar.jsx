@@ -113,7 +113,7 @@ const Sidebar = () => {
             <img
               src={authenticatedUser.profileImage || "/avatar-placeholder.png"}
               alt=""
-              className="w-10 h-10 rounded-full object-contain"
+              className="w-10 h-10 rounded-full object-cover"
             />
             <div className="w-fit h-full flex flex-col items-start">
               <h1 className="text-sm">{authenticatedUser.fullname}</h1>
