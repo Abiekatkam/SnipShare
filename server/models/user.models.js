@@ -80,7 +80,12 @@ const userSchema = new mongoose.Schema(
     },
     resetpasswordOtp: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true }, 
+  {
+    capped: { size: 1024 },
+    bufferCommands: false,
+    autoCreate: false // disable `autoCreate` since `bufferCommands` is false
+  }
 );
 
 const User = mongoose.model("User", userSchema);

@@ -11,6 +11,10 @@ const connectMongoDB = async () => {
     console.log(`Error connection to Databse: ${error.message}`);
     process.exit(1);
   }
+
+  mongoose.connection.on('error', err => {
+    console.error(err);
+  });
 };
 
 export default connectMongoDB;

@@ -8,6 +8,7 @@ import ExplorePage from "./explore/ExplorePage";
 import NotificationPage from "./notification/NotificationPage";
 import MessagePage from "./message/MessagePage";
 import ProfilePage from "./profile/ProfilePage";
+import ProfileDetailPage from "./profile/ProfileDetailPage";
 
 export {
   RootPage,
@@ -20,4 +21,5 @@ export {
   NotificationPage,
   MessagePage,
   ProfilePage,
+  ProfileDetailPage
 };

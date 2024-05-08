@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { TbCameraPlus } from "@/components/constants/Icons";
@@ -11,8 +11,6 @@ const EditProfileForm = () => {
   const { data: authenticatedUser } = useQuery({
     queryKey: ["authorisedCurrentUser"],
   });
-
-  const editProfileModalCloseRef = useRef(null); 
 
   const [formState, setFormState] = useState({
     fullname: authenticatedUser?.fullname || "",
@@ -35,11 +33,15 @@ const EditProfileForm = () => {
         ? authenticatedUser.instagramurl
         : "",
   });
+  const [isValidRemoveProfileImage, setIsValidRemoveProfileImage] =
+    useState(false);
+  const [isValidRemoveCoverImage, setIsValidRemoveCoverImage] = useState(false);
 
   const maxUrlLimit = 100;
   const maxBioLimit = 230;
   const profileImageFileRef = useRef(null);
   const coverImageFileRef = useRef(null);
+  const editProfileModalCloseRef = useRef(null);
 
   const handleProfileImageFileClick = () => {
     profileImageFileRef.current.click();
@@ -63,6 +65,7 @@ const EditProfileForm = () => {
         }));
       };
       reader.readAsDataURL(file);
+      setIsValidRemoveCoverImage(true);
     }
   };
 
@@ -77,13 +80,36 @@ const EditProfileForm = () => {
         }));
       };
       reader.readAsDataURL(file);
+      setIsValidRemoveProfileImage(true);
     }
+  };
+
+  const handleProfileImageRemove = () => {
+    setFormState((prevState) => ({
+      ...prevState,
+      profileImage: "/avatar-placeholder.png",
+    }));
+    setIsValidRemoveProfileImage(false);
+  };
+
+  const handleCoverImageRemove = () => {
+    setFormState((prevState) => ({
+      ...prevState,
+      coverImage: "/cover.png",
+    }));
+    setIsValidRemoveCoverImage(false);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const isValid = isFormValid();
     if (isValid) {
+      if (formState.coverImage == "/cover.png") {
+        formState.coverImage = "";
+      }
+      if (formState.profileImage == "/avatar-placeholder.png") {
+        formState.profileImage = "";
+      }
       EditProfileMutation(formState);
     }
   };
@@ -217,6 +243,15 @@ const EditProfileForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (formState.coverImage !== "/cover.png") {
+      setIsValidRemoveCoverImage(true);
+    }
+    if (formState.profileImage !== "/avatar-placeholder.png") {
+      setIsValidRemoveProfileImage(true);
+    }
+  }, [formState.coverImage, formState.profileImage]);
+
   return (
     <>
       <form
@@ -246,7 +281,6 @@ const EditProfileForm = () => {
                 onChange={handleCoverImageChange}
               />
             </div>
-
             <div className="absolute w-24 h-24 rounded-full bg-slate-400 z-10 -bottom-2 left-2 border-4 border-slate-400 dark:border-slate-300">
               <img
                 src={formState.profileImage}
@@ -267,6 +301,26 @@ const EditProfileForm = () => {
                 onChange={handleProfileImageChange}
               />
             </div>
+            {isValidRemoveCoverImage && (
+              <Button
+                type="button"
+                variant="outline"
+                className="absolute right-0 bottom-0 h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                onClick={handleCoverImageRemove}
+              >
+                remove cover image
+              </Button>
+            )}
+            {isValidRemoveProfileImage && (
+              <Button
+                type="button"
+                variant="outline"
+                className="absolute right-32 bottom-0 h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                onClick={handleProfileImageRemove}
+              >
+                remove profile image
+              </Button>
+            )}{" "}
           </div>
 
           <label className="mb-1 block mt-6 w-full">
@@ -332,7 +386,7 @@ const EditProfileForm = () => {
               autoComplete="off"
               name="websiteurl"
               onChange={handleInputStateChange}
-              value={formState.webiteurl}
+              value={formState.websiteurl}
               placeholder=""
             />
             <span
@@ -474,7 +528,12 @@ const EditProfileForm = () => {
         </Button>
       </form>
       <DialogClose asChild>
-        <Button type="button" variant="secondary" className="hidden" ref={editProfileModalCloseRef}>
+        <Button
+          type="button"
+          variant="secondary"
+          className="hidden"
+          ref={editProfileModalCloseRef}
+        >
           Close
         </Button>
       </DialogClose>

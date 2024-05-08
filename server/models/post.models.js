@@ -34,6 +34,11 @@ const postSchema = new mongoose.Schema(
     ],
   },
   { timestamps: true }
+  , {
+    capped: { size: 1024 },
+    bufferCommands: false,
+    autoCreate: false // disable `autoCreate` since `bufferCommands` is false
+  }
 );
 
 const Post = mongoose.model("Post", postSchema);

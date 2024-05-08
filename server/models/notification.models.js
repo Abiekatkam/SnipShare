@@ -22,7 +22,11 @@ const notificationSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true }, {
+    capped: { size: 1024 },
+    bufferCommands: false,
+    autoCreate: false // disable `autoCreate` since `bufferCommands` is false
+  }
 );
 
 const Notification = mongoose.model("Notification", notificationSchema);

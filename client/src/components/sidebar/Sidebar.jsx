@@ -109,19 +109,19 @@ const Sidebar = () => {
         </div>
 
         <div className="mt-auto w-full flex items-center justify-between gap-3 rounded-xl p-2 px-3 font-semibold text-lg tracking-wide dark:text-white transition-all bg-slate-200 text-[#09090b] ease-in dark:bg-[#27272a]">
-          <div className="w-fit flex items-center gap-2">
+          <Link to={`/profile`} className="w-fit flex items-center gap-2">
             <img
               src={authenticatedUser.profileImage || "/avatar-placeholder.png"}
               alt=""
               className="w-10 h-10 rounded-full object-cover"
             />
             <div className="w-fit h-full flex flex-col items-start">
-              <h1 className="text-sm">{authenticatedUser.fullname}</h1>
+              <h1 className="text-sm capitalize">{authenticatedUser.fullname}</h1>
               <p className="text-xs text-slate-500">
                 @{authenticatedUser.username}
               </p>
             </div>
-          </div>
+          </Link>
           <LuLogOut
             className="cursor-pointer"
             onClick={(e) => {

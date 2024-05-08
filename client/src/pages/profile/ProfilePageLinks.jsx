@@ -15,10 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const ProfilePageLinks = () => {
-  const { data: authenticatedUser } = useQuery({
-    queryKey: ["authorisedCurrentUser"],
-  });
+const ProfilePageLinks = ({authenticatedUser}) => {
 
   const isLinkUrlPresent = (authenticatedUser.websiteurl ? true : false);
   const isGithubUrlPresent = (authenticatedUser.githuburl ? true : false);

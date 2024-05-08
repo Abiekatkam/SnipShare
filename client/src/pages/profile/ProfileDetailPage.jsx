@@ -1,23 +1,32 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegCalendarAlt } from "@/components/constants/Icons";
-import { useQuery } from "@tanstack/react-query";
 import ProfilePageLinks from "./ProfilePageLinks";
-import EditProfileModal from "@/components/modals/EditProfileModal";
+import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-const ProfilePage = () => {
-  const { data: authenticatedUser } = useQuery({
-    queryKey: ["authorisedCurrentUser"],
-  });
-  const dateFormat = new Date(authenticatedUser?.createdAt);
+const ProfileDetailPage = () => {
+  let { username } = useParams();
+  const [authorisedUserProfile, setAuthorisedUserProfile] = useState({});
+
+  const FetchUserProfile = async (user) => {
+    const response = await fetch(`/api/users/profile/${user}`);
+    const responseData = await response.json();
+    setAuthorisedUserProfile(responseData?.data);
+  };
+
+  useEffect(() => {
+    FetchUserProfile(username);
+  }, [username]);
+
+  const dateFormat = new Date(authorisedUserProfile?.createdAt);
   const isLinkPresent =
-    authenticatedUser?.websiteurl != "" ||
-    authenticatedUser?.githuburl != "" ||
-    authenticatedUser?.facebookurl != "" ||
-    authenticatedUser?.instagramurl != "" ||
-    authenticatedUser?.linkedinurl != "" ||
-    authenticatedUser?.twitterurl != "";
-
+    authorisedUserProfile?.websiteurl != "" ||
+    authorisedUserProfile?.githuburl != "" ||
+    authorisedUserProfile?.facebookurl != "" ||
+    authorisedUserProfile?.instagramurl != "" ||
+    authorisedUserProfile?.linkedinurl != "" ||
+    authorisedUserProfile?.twitterurl != "";
   return (
     <>
       <div className="flex-[4_4_0] mr-auto border-r border-slate-300 dark:border-slate-500 min-h-screen p-4">
@@ -26,30 +35,35 @@ const ProfilePage = () => {
             <div className="w-full h-[200px] relative">
               <div className="w-full h-full bg-slate-200 dark:bg-slate-600 rounded-md">
                 <img
-                  src={authenticatedUser?.coverImage || "/cover.png"}
+                  src={authorisedUserProfile?.coverImage || "/cover.png"}
                   alt=""
                   className="w-full h-full object-cover rounded-md"
                 />
               </div>
               <div className="absolute w-36 h-36 rounded-full bg-slate-400 z-10 -bottom-16 left-6 border-4 border-slate-200 dark:border-slate-300">
                 <img
-                  src={authenticatedUser?.profileImage || "/avatar-placeholder.png"}
+                  src={
+                    authorisedUserProfile?.profileImage ||
+                    "/avatar-placeholder.png"
+                  }
                   alt=""
                   className="w-full h-full object-cover rounded-full"
                 />
               </div>
             </div>
 
-            <EditProfileModal/>
+            <Button className="w-fit ml-auto mt-3 mb-1 h-8 px-4 dark:text-white dark:bg-[#09090b] border rounded-md border-[#09090b] text-sm dark:border-slate-200">
+                Follow
+            </Button>
 
             <div className="w-full h-fit min-h-[125px] flex-col flex p-4 mt-2">
               <div className="w-full flex flex-row items-start justify-between">
                 <div className="w-fit flex flex-col items-start">
                   <h1 className="text-2xl font-bold text-slate-900/80 dark:text-slate-50 capitalize">
-                    {authenticatedUser?.fullname}
+                    {authorisedUserProfile?.fullname}
                   </h1>
                   <p className="text-md text-slate-700 dark:text-slate-400">
-                    @{authenticatedUser?.username}
+                    @{authorisedUserProfile?.username}
                   </p>
                 </div>
 
@@ -60,11 +74,13 @@ const ProfilePage = () => {
                 </span>
               </div>
 
-              {isLinkPresent && <ProfilePageLinks authenticatedUser={authenticatedUser} />}
+              {isLinkPresent && (
+                <ProfilePageLinks authenticatedUser={authorisedUserProfile} />
+              )}
 
-              {authenticatedUser?.bio && (
+              {authorisedUserProfile?.bio && (
                 <div className="w-full h-fit mt-2 indent-7 text-pretty">
-                  {authenticatedUser?.bio}
+                  {authorisedUserProfile?.bio}
                 </div>
               )}
 
@@ -72,7 +88,7 @@ const ProfilePage = () => {
                 <div className="w-fit flex items-center">
                   <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
                     <span className="font-semibold text-[#09090b] dark:text-white">
-                      {authenticatedUser?.followers?.length}
+                      {authorisedUserProfile?.followers?.length}
                     </span>{" "}
                     Followers
                   </p>
@@ -80,7 +96,7 @@ const ProfilePage = () => {
                 <div className="w-fit flex items-center">
                   <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
                     <span className="font-semibold text-[#09090b] dark:text-white">
-                      {authenticatedUser?.followings?.length}
+                      {authorisedUserProfile?.followings?.length}
                     </span>{" "}
                     Followings
                   </p>
@@ -93,9 +109,9 @@ const ProfilePage = () => {
           <div></div>
         </div>
       </div>
-      <WhoToFollow createPostVisible={true} />
+      <WhoToFollow />
     </>
   );
 };
 
-export default ProfilePage;
+export default ProfileDetailPage;

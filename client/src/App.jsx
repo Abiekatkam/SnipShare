@@ -6,6 +6,7 @@ import {
   LoginPage,
   MessagePage,
   NotificationPage,
+  ProfileDetailPage,
   ProfilePage,
   RegisterPage,
   ResetPasswordPage,
@@ -26,16 +27,19 @@ const isRouteInList = (currentPath) => {
     "/messages",
     "/settings",
     "/profile",
-    "/login",
-    "/login",
   ];
 
+  // Check if the current path matches any of the static routes
+  if (routeList.includes(currentPath)) {
+    return true;
+  }
+
+  // Check if the current path matches any parent routes with dynamic parameters
   return routeList.some((route) => {
-    if (route.includes(":")) {
-      const regex = new RegExp(`^${route.replace(/:\w+/g, "\\w+")}$`);
-      return regex.test(currentPath);
-    }
-    return route === currentPath;
+    // Replace dynamic parameters in the route with a regular expression pattern
+    const regexRoute = route.replace(/:[^/]+/g, "\\w+");
+    const regex = new RegExp(`^${regexRoute}(\/\\w+)*$`);
+    return regex.test(currentPath);
   });
 };
 
@@ -49,7 +53,7 @@ const App = () => {
       try {
         const response = await fetch("/api/auth/current-user");
         const responseData = await response.json();
-        console.log(responseData)
+        console.log(responseData);
         if (responseData?.status == "error") {
           return null;
         }
@@ -65,6 +69,7 @@ const App = () => {
     },
     retry: false,
   });
+
 
   if (isLoading) {
     return (
@@ -117,6 +122,16 @@ const App = () => {
             path="/profile"
             element={
               authorisedCurrentUser ? <ProfilePage /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/profile/:username"
+            element={
+              authorisedCurrentUser ? (
+                <ProfileDetailPage />
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
           <Route

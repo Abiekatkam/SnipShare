@@ -40,7 +40,7 @@ const RootPage = () => {
 
         <div className="mt-4 overflow-y-scroll h-fit">{/* feeds */}</div>
       </div>
-      <WhoToFollow isHomePage={true} />
+      <WhoToFollow createPostVisible={true} />
     </>
   );
 };

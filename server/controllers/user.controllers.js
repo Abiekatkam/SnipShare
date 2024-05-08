@@ -1,6 +1,5 @@
 import User from "../models/user.models.js";
 import Notification from "../models/notification.models.js";
-import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import { isValidUsername } from "../utility/utils/validUsername.js";
 
@@ -8,7 +7,7 @@ export const userGetUserProfile = async (req, res) => {
   const { username } = req.params;
 
   try {
-    const user = User.findOne({ username }).select("-password");
+    const user = await User.findOne({ username }).select("-password").select("-resetpasswordOtp");
     if (!user) {
       return res.status(404).json({
         status: "error",
@@ -116,16 +115,16 @@ export const userGetSuggestedProfile = async (req, res) => {
     );
 
     const suggestedUser = filteredUser.slice(0, 5);
-    suggestedUser.forEach((user) => (user.password = null));
+    suggestedUser.forEach((user) => (user.password = null, user.resetpasswordOtp = null));
 
-    res.status(200).json({
+    return res.status(200).json({
       data: suggestedUser,
     });
   } catch (error) {
     console.log(
       `userGetSuggestedProfile Controller : Something went wrong. ${error.message}`
     );
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       message: "Internal Server Error",
     });
@@ -190,10 +189,14 @@ export const userUpdateProfile = async (req, res) => {
           user.profileImage.split("/").pop().split(".")[0]
         );
       }
-      const updateProfileImageResponse = await cloudinary.uploader.upload(
-        profileImage
-      );
-      profileImage = updateProfileImageResponse.secure_url;
+      if (profileImage !== "") {
+        const updateProfileImageResponse = await cloudinary.uploader.upload(
+          profileImage
+        );
+        profileImage = updateProfileImageResponse.secure_url;
+      } else {
+        profileImage = "";
+      }
     }
 
     if (user.coverImage !== coverImage) {
@@ -202,10 +205,14 @@ export const userUpdateProfile = async (req, res) => {
           user.coverImage.split("/").pop().split(".")[0]
         );
       }
-      const updateCoverImageResponse = await cloudinary.uploader.upload(
-        coverImage
-      );
-      coverImage = updateCoverImageResponse.secure_url;
+      if (coverImage !== "") {
+        const updateCoverImageResponse = await cloudinary.uploader.upload(
+          coverImage
+        );
+        coverImage = updateCoverImageResponse.secure_url;
+      } else {
+        coverImage = "";
+      }
     }
 
     user.fullname = fullname || user.fullname;
@@ -217,8 +224,8 @@ export const userUpdateProfile = async (req, res) => {
     user.twitterurl = twitterurl || user.twitterurl;
     user.instagramurl = instagramurl || user.instagramurl;
     user.linkedinurl = linkedinurl || user.linkedinurl;
-    user.profileImage = profileImage || user.profileImage;
-    user.coverImage = coverImage || user.coverImage;
+    user.profileImage = profileImage;
+    user.coverImage = coverImage;
 
     user = await user.save();
     user.password = null;
