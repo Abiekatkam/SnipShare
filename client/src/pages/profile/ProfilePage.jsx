@@ -4,6 +4,8 @@ import { FaRegCalendarAlt } from "@/components/constants/Icons";
 import { useQuery } from "@tanstack/react-query";
 import ProfilePageLinks from "./ProfilePageLinks";
 import EditProfileModal from "@/components/modals/EditProfileModal";
+import FollowersListModal from "@/components/modals/FollowersListModal";
+import FollowingListModal from "@/components/modals/FollowingListModal";
 
 const ProfilePage = () => {
   const { data: authenticatedUser } = useQuery({
@@ -33,14 +35,16 @@ const ProfilePage = () => {
               </div>
               <div className="absolute w-36 h-36 rounded-full bg-slate-400 z-10 -bottom-16 left-6 border-4 border-slate-200 dark:border-slate-300">
                 <img
-                  src={authenticatedUser?.profileImage || "/avatar-placeholder.png"}
+                  src={
+                    authenticatedUser?.profileImage || "/avatar-placeholder.png"
+                  }
                   alt=""
                   className="w-full h-full object-cover rounded-full"
                 />
               </div>
             </div>
 
-            <EditProfileModal/>
+            <EditProfileModal />
 
             <div className="w-full h-fit min-h-[125px] flex-col flex p-4 mt-2">
               <div className="w-full flex flex-row items-start justify-between">
@@ -60,7 +64,9 @@ const ProfilePage = () => {
                 </span>
               </div>
 
-              {isLinkPresent && <ProfilePageLinks authenticatedUser={authenticatedUser} />}
+              {isLinkPresent && (
+                <ProfilePageLinks authenticatedUser={authenticatedUser} />
+              )}
 
               {authenticatedUser?.bio && (
                 <div className="w-full h-fit mt-2 indent-7 text-pretty">
@@ -69,22 +75,14 @@ const ProfilePage = () => {
               )}
 
               <div className="w-fit h-fit mt-2 flex flex-row items-start gap-4">
-                <div className="w-fit flex items-center">
-                  <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold text-[#09090b] dark:text-white">
-                      {authenticatedUser?.followers?.length}
-                    </span>{" "}
-                    Followers
-                  </p>
-                </div>
-                <div className="w-fit flex items-center">
-                  <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold text-[#09090b] dark:text-white">
-                      {authenticatedUser?.followings?.length}
-                    </span>{" "}
-                    Followings
-                  </p>
-                </div>
+                <FollowersListModal
+                  FollowersCount={authenticatedUser?.followers?.length}
+                  UserId={authenticatedUser?._id}
+                />
+                <FollowingListModal
+                  FollowingCount={authenticatedUser?.followings?.length}
+                  UserId={authenticatedUser?._id}
+                />
               </div>
             </div>
           </div>

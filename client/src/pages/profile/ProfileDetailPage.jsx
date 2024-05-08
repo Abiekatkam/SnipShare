@@ -2,12 +2,21 @@ import WhoToFollow from "@/components/aside/WhoToFollow";
 import React, { useEffect, useState } from "react";
 import { FaRegCalendarAlt } from "@/components/constants/Icons";
 import ProfilePageLinks from "./ProfilePageLinks";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import FollowersListModal from "@/components/modals/FollowersListModal";
+import { useQuery } from "@tanstack/react-query";
+import FollowingListModal from "@/components/modals/FollowingListModal";
 
 const ProfileDetailPage = () => {
   let { username } = useParams();
   const [authorisedUserProfile, setAuthorisedUserProfile] = useState({});
+
+  const navigate = useNavigate();
+
+  const { data: authenticatedUser } = useQuery({
+    queryKey: ["authorisedCurrentUser"],
+  });
 
   const FetchUserProfile = async (user) => {
     const response = await fetch(`/api/users/profile/${user}`);
@@ -16,6 +25,9 @@ const ProfileDetailPage = () => {
   };
 
   useEffect(() => {
+    if (authenticatedUser.username === username) {
+      navigate("/profile");
+    }
     FetchUserProfile(username);
   }, [username]);
 
@@ -53,7 +65,7 @@ const ProfileDetailPage = () => {
             </div>
 
             <Button className="w-fit ml-auto mt-3 mb-1 h-8 px-4 dark:text-white dark:bg-[#09090b] border rounded-md border-[#09090b] text-sm dark:border-slate-200">
-                Follow
+              Follow
             </Button>
 
             <div className="w-full h-fit min-h-[125px] flex-col flex p-4 mt-2">
@@ -85,22 +97,14 @@ const ProfileDetailPage = () => {
               )}
 
               <div className="w-fit h-fit mt-2 flex flex-row items-start gap-4">
-                <div className="w-fit flex items-center">
-                  <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold text-[#09090b] dark:text-white">
-                      {authorisedUserProfile?.followers?.length}
-                    </span>{" "}
-                    Followers
-                  </p>
-                </div>
-                <div className="w-fit flex items-center">
-                  <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                    <span className="font-semibold text-[#09090b] dark:text-white">
-                      {authorisedUserProfile?.followings?.length}
-                    </span>{" "}
-                    Followings
-                  </p>
-                </div>
+                <FollowersListModal
+                  FollowersCount={authorisedUserProfile?.followers?.length}
+                  UserId={authorisedUserProfile?._id}
+                />
+                <FollowingListModal
+                  FollowingCount={authorisedUserProfile?.followings?.length}
+                  UserId={authorisedUserProfile?._id}
+                />
               </div>
             </div>
           </div>

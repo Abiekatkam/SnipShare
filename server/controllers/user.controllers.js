@@ -7,7 +7,9 @@ export const userGetUserProfile = async (req, res) => {
   const { username } = req.params;
 
   try {
-    const user = await User.findOne({ username }).select("-password").select("-resetpasswordOtp");
+    const user = await User.findOne({ username })
+      .select("-password")
+      .select("-resetpasswordOtp");
     if (!user) {
       return res.status(404).json({
         status: "error",
@@ -115,7 +117,9 @@ export const userGetSuggestedProfile = async (req, res) => {
     );
 
     const suggestedUser = filteredUser.slice(0, 5);
-    suggestedUser.forEach((user) => (user.password = null, user.resetpasswordOtp = null));
+    suggestedUser.forEach(
+      (user) => ((user.password = null), (user.resetpasswordOtp = null))
+    );
 
     return res.status(200).json({
       data: suggestedUser,
@@ -276,6 +280,70 @@ export const userDeleteProfile = async (req, res) => {
     console.log(
       `userDeleteProfile Controller : Something went wrong. ${error.message}`
     );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const userFollowersList = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    const followersList = await User.find({
+      _id: { $in: user.followers },
+    }).populate({
+      path: "user",
+      select: "-password",
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "All user followers list",
+      data: followersList,
+    });
+  } catch (error) {
+    console.log(`userFollowersList Controller : ${error.message}`);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const userFollowingsList = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    const followingsList = await User.find({
+      _id: { $in: user.followings },
+    }).populate({
+      path: "user",
+      select: "-password",
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "All user following list",
+      data: followingsList,
+    });
+  } catch (error) {
+    console.log(`userFollowingsList Controller : ${error.message}`);
     res.status(500).json({
       status: "error",
       message: "Internal Server Error",
