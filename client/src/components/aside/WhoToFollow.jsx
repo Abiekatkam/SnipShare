@@ -28,7 +28,6 @@ const WhoToFollow = ({ createPostVisible = false }) => {
     retry: false,
   });
 
-
   return (
     <div className="flex-[3_3_0] w-20 max-w-96 min-h-screen">
       <div className="sticky top-0 left-0 h-screen flex flex-col w-20 md:w-full p-4">

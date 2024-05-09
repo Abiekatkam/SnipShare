@@ -1,16 +1,17 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
 import React, { useEffect, useState } from "react";
-import { FaRegCalendarAlt } from "@/components/constants/Icons";
+import { FaRegCalendarAlt, FaLock } from "@/components/constants/Icons";
 import ProfilePageLinks from "./ProfilePageLinks";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import FollowersListModal from "@/components/modals/FollowersListModal";
 import { useQuery } from "@tanstack/react-query";
 import FollowingListModal from "@/components/modals/FollowingListModal";
+import ProfileFollowUnfollow from "./ProfileFollowUnfollow";
 
 const ProfileDetailPage = () => {
   let { username } = useParams();
   const [authorisedUserProfile, setAuthorisedUserProfile] = useState({});
+  const [isFollowing, setIsFollowing] = useState("Follow");
 
   const navigate = useNavigate();
 
@@ -22,6 +23,13 @@ const ProfileDetailPage = () => {
     const response = await fetch(`/api/users/profile/${user}`);
     const responseData = await response.json();
     setAuthorisedUserProfile(responseData?.data);
+    if (responseData?.status == "success") {
+      if (responseData?.data?.followers.includes(authenticatedUser?._id)) {
+        setIsFollowing("Unfollow");
+      } else {
+        setIsFollowing("Follow");
+      }
+    }
   };
 
   useEffect(() => {
@@ -39,6 +47,7 @@ const ProfileDetailPage = () => {
     authorisedUserProfile?.instagramurl != "" ||
     authorisedUserProfile?.linkedinurl != "" ||
     authorisedUserProfile?.twitterurl != "";
+
   return (
     <>
       <div className="flex-[4_4_0] mr-auto border-r border-slate-300 dark:border-slate-500 min-h-screen p-4">
@@ -63,10 +72,11 @@ const ProfileDetailPage = () => {
                 />
               </div>
             </div>
-
-            <Button className="w-fit ml-auto mt-3 mb-1 h-8 px-4 dark:text-white dark:bg-[#09090b] border rounded-md border-[#09090b] text-sm dark:border-slate-200">
-              Follow
-            </Button>
+            {isFollowing &&
+            <ProfileFollowUnfollow
+              followId={authorisedUserProfile?._id}
+              isFollowing={isFollowing}
+            />}
 
             <div className="w-full h-fit min-h-[125px] flex-col flex p-4 mt-2">
               <div className="w-full flex flex-row items-start justify-between">
@@ -86,7 +96,7 @@ const ProfileDetailPage = () => {
                 </span>
               </div>
 
-              {isLinkPresent && (
+              {isLinkPresent && !authorisedUserProfile?.isAccountPrivate && (
                 <ProfilePageLinks authenticatedUser={authorisedUserProfile} />
               )}
 
@@ -100,17 +110,35 @@ const ProfileDetailPage = () => {
                 <FollowersListModal
                   FollowersCount={authorisedUserProfile?.followers?.length}
                   UserId={authorisedUserProfile?._id}
+                  isAccountPrivate={authorisedUserProfile?.isAccountPrivate}
                 />
                 <FollowingListModal
                   FollowingCount={authorisedUserProfile?.followings?.length}
                   UserId={authorisedUserProfile?._id}
+                  isAccountPrivate={authorisedUserProfile?.isAccountPrivate}
                 />
               </div>
             </div>
           </div>
 
           {/* personal feed */}
-          <div></div>
+          {authorisedUserProfile?.isAccountPrivate ? (
+            <div className="w-full flex items-center justify-center h-[196px] mt-2 rounded-md bg-slate-100 dark:bg-[#27272a]">
+              <div className="w-fit h-fit flex flex-col items-center">
+                <span className="text-2xl text-slate-500 p-4 rounded-full ring-2 ring-slate-500 dark:text-slate-200 dark:ring-slate-200">
+                  <FaLock />
+                </span>
+                <h1 className="text-lg font-semibold text-slate-600 mt-2 mb-0 dark:text-slate-300">
+                  This account is private
+                </h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Follow to see their feeds.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <WhoToFollow />

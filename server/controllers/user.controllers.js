@@ -35,7 +35,7 @@ export const userGetUserProfile = async (req, res) => {
 
 export const userFollowUnfollowUser = async (req, res) => {
   try {
-    const { followerId } = req.params;
+    const { followerId } = req.body;
     const userToModify = await User.findById(followerId);
     const currentUser = await User.findById(req.user._id);
 
@@ -65,6 +65,8 @@ export const userFollowUnfollowUser = async (req, res) => {
       res.status(200).json({
         status: "success",
         message: "User unfollowed successfully",
+        type: "Follow",
+        show: false,
       });
     } else {
       await User.findByIdAndUpdate(followerId, {
@@ -85,6 +87,8 @@ export const userFollowUnfollowUser = async (req, res) => {
       res.status(200).json({
         status: "success",
         message: "User followed successfully",
+        type: "Unfollow",
+        show: true,
       });
     }
   } catch (error) {
@@ -300,9 +304,6 @@ export const userFollowersList = async (req, res) => {
 
     const followersList = await User.find({
       _id: { $in: user.followers },
-    }).populate({
-      path: "user",
-      select: "-password",
     });
 
     return res.status(200).json({
@@ -332,9 +333,6 @@ export const userFollowingsList = async (req, res) => {
 
     const followingsList = await User.find({
       _id: { $in: user.followings },
-    }).populate({
-      path: "user",
-      select: "-password",
     });
 
     return res.status(200).json({

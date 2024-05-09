@@ -78,10 +78,12 @@ const ProfilePage = () => {
                 <FollowersListModal
                   FollowersCount={authenticatedUser?.followers?.length}
                   UserId={authenticatedUser?._id}
+                  isAccountPrivate={false}
                 />
                 <FollowingListModal
                   FollowingCount={authenticatedUser?.followings?.length}
                   UserId={authenticatedUser?._id}
+                  isAccountPrivate={false}
                 />
               </div>
             </div>

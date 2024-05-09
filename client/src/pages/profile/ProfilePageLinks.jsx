@@ -33,7 +33,7 @@ const ProfilePageLinks = ({authenticatedUser}) => {
     : false);
 
   return (
-    <div className="w-fit h-fit mt-3 flex flex-row items-start gap-4">
+    <div className="w-fit h-fit mt-3 flex flex-row items-start gap-2">
       {isLinkUrlPresent && (
         <TooltipProvider>
           <Tooltip>

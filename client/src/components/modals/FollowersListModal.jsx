@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SuggestedUserCard from "../cards/SuggestedUserCard";
 
-const FollowersListModal = ({ FollowersCount, UserId }) => {
+const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
   const { data: authenticatedUser } = useQuery({
     queryKey: ["authorisedCurrentUser"],
   });
@@ -29,7 +29,7 @@ const FollowersListModal = ({ FollowersCount, UserId }) => {
 
       const data = await response.json();
       console.log(data);
-      if (data.message == "success") {
+      if (data.status == "success") {
         setFetchFollowersList(data?.data);
       }
     } catch (error) {
@@ -37,15 +37,12 @@ const FollowersListModal = ({ FollowersCount, UserId }) => {
     }
   };
 
-  useEffect(() => {
-    GetUserFollowersList(UserId);
-  }, [UserId]);
-
-  return (
+  return !isAccountPrivate ? (
     <Dialog>
       <DialogTrigger
         asChild
         className="cursor-pointer hover:underline transition-all ease-in duration-200"
+        onClick={() => GetUserFollowersList(UserId)}
       >
         <div className="w-fit flex items-center">
           <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
@@ -80,6 +77,15 @@ const FollowersListModal = ({ FollowersCount, UserId }) => {
         </div>
       </DialogContent>
     </Dialog>
+  ) : (
+    <div className="w-fit flex items-center">
+      <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
+        <span className="font-semibold text-[#09090b] dark:text-white">
+          {FollowersCount}
+        </span>{" "}
+        Followers
+      </p>
+    </div>
   );
 };
 

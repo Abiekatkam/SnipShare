@@ -13,6 +13,7 @@ import {
   FaFacebook,
   FaLink,
   FaRegFaceSmile,
+  FaLock,
 } from "react-icons/fa6";
 import {
   FaHome,
@@ -52,5 +53,6 @@ export {
   FaRegCalendarAlt,
   FaFacebook,
   FaLink,
-  TbCameraPlus
+  TbCameraPlus,
+  FaLock 
 };
