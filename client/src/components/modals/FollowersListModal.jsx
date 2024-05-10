@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SuggestedUserCard from "../cards/SuggestedUserCard";
 
@@ -16,6 +16,7 @@ const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
   });
 
   const [fetchFollowersList, setFetchFollowersList] = useState([]);
+  const queryClient = useQueryClient();
 
   const GetUserFollowersList = async (userId) => {
     try {
@@ -34,6 +35,33 @@ const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
       }
     } catch (error) {
       toast.error("Error fetching user followers list:", error.message);
+    }
+  };
+
+  const handleUnfollowFollowerList = async (userIdToUnfollow) => {
+    try {
+      const response = await fetch("/api/users/remove-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ followerId: userIdToUnfollow }),
+      });
+
+      const data = await response.json();
+      if (data.status == "success") {
+        queryClient.invalidateQueries({
+          queryKey: ["authorisedGetSuggestedUser"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["authorisedCurrentUser"],
+        });
+      }
+  
+      const updatedFollowerList = fetchFollowersList.filter(user => user._id !== userIdToUnfollow);
+      setFetchFollowersList(updatedFollowerList);
+    } catch (error) {
+      toast.error("Error unfollowing user:", error.message);
     }
   };
 
@@ -63,7 +91,7 @@ const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
         <div className="w-full max-h-[500px] h-fit min-h-[350px] overflow-y-scroll flex flex-col items-start justify-start gap-1">
           {fetchFollowersList.length > 0 ? (
             fetchFollowersList?.map((users) => (
-              <SuggestedUserCard key={users._id} data={users} />
+              <SuggestedUserCard key={users._id} data={users} handleUnfollow={handleUnfollowFollowerList} type="Remove" />
             ))
           ) : (
             <p className="w-fit m-auto text-pretty text-center px-6 text-md">

@@ -7,13 +7,14 @@ import FollowersListModal from "@/components/modals/FollowersListModal";
 import { useQuery } from "@tanstack/react-query";
 import FollowingListModal from "@/components/modals/FollowingListModal";
 import ProfileFollowUnfollow from "./ProfileFollowUnfollow";
+import { Button } from "@/components/ui/button";
+import SpinLoader from "@/components/loaders/SpinLoader";
 
 const ProfileDetailPage = () => {
   let { username } = useParams();
   const [authorisedUserProfile, setAuthorisedUserProfile] = useState({});
-  const [isFollowing, setIsFollowing] = useState("Follow");
-
   const navigate = useNavigate();
+  const [isFollowing, setIsFollowing] = useState(null);
 
   const { data: authenticatedUser } = useQuery({
     queryKey: ["authorisedCurrentUser"],
@@ -22,14 +23,9 @@ const ProfileDetailPage = () => {
   const FetchUserProfile = async (user) => {
     const response = await fetch(`/api/users/profile/${user}`);
     const responseData = await response.json();
+    console.log(responseData);
     setAuthorisedUserProfile(responseData?.data);
-    if (responseData?.status == "success") {
-      if (responseData?.data?.followers.includes(authenticatedUser?._id)) {
-        setIsFollowing("Unfollow");
-      } else {
-        setIsFollowing("Follow");
-      }
-    }
+    setIsFollowing(responseData?.isFollowing);
   };
 
   useEffect(() => {
@@ -37,7 +33,7 @@ const ProfileDetailPage = () => {
       navigate("/profile");
     }
     FetchUserProfile(username);
-  }, [username]);
+  }, [username, isFollowing]);
 
   const dateFormat = new Date(authorisedUserProfile?.createdAt);
   const isLinkPresent =
@@ -72,11 +68,17 @@ const ProfileDetailPage = () => {
                 />
               </div>
             </div>
-            {isFollowing &&
-            <ProfileFollowUnfollow
-              followId={authorisedUserProfile?._id}
-              isFollowing={isFollowing}
-            />}
+            {isFollowing ? (
+              <ProfileFollowUnfollow
+                followId={authorisedUserProfile?._id}
+                isFollowing={isFollowing}
+                setIsFollowing={setIsFollowing}
+              />
+            ) : (
+              <Button className="w-fit ml-auto mt-3 mb-1 h-8 px-4 text-sm border rounded-md border-[#09090b] dark:border-slate-200 dark:text-white dark:bg-[#09090b]">
+                <SpinLoader />
+              </Button>
+            )}
 
             <div className="w-full h-fit min-h-[125px] flex-col flex p-4 mt-2">
               <div className="w-full flex flex-row items-start justify-between">

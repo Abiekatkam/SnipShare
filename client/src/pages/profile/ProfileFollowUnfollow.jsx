@@ -1,14 +1,11 @@
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const ProfileFollowUnfollow = ({ followId, isFollowing }) => {
-   const [buttonType, setButtonType] = useState(isFollowing);
-
-   console.log(isFollowing, buttonType);
-   if(isFollowing != buttonType){
-    setButtonType(isFollowing);
-   }
+const ProfileFollowUnfollow = ({ followId, isFollowing = "", setIsFollowing}) => {
+  const [isFollow, setIdFollow] = useState(isFollowing);
+  const queryClient = useQueryClient();
 
   const UpdateFollowUnfollowUser = async () => {
     try {
@@ -22,7 +19,11 @@ const ProfileFollowUnfollow = ({ followId, isFollowing }) => {
 
       const data = await response.json();
       if (data.status == "success") {
-        setButtonType(data?.type);
+        setIdFollow(data?.type);
+        setIsFollowing(data?.type);
+        queryClient.invalidateQueries({
+          queryKey: ["authorisedGetSuggestedUser"],
+        });
         if (data.show) {
           toast.success(data?.message);
         }
@@ -36,12 +37,12 @@ const ProfileFollowUnfollow = ({ followId, isFollowing }) => {
     <Button
       onClick={() => UpdateFollowUnfollowUser()}
       className={`w-fit ml-auto mt-3 mb-1 h-8 px-4 text-sm border rounded-md border-[#09090b] dark:border-slate-200 ${
-        buttonType == "Follow"
+        isFollow == "Follow"
           ? "dark:text-white dark:bg-[#09090b]"
           : "text-[#09090b] bg-white dark:text-white dark:bg-[#09090b] hover:bg-white dark:hover:bg-[#09090b]"
       } `}
     >
-      {buttonType}
+      {isFollow}
     </Button>
   );
 };

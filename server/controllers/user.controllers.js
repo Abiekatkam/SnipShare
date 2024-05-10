@@ -5,8 +5,11 @@ import { isValidUsername } from "../utility/utils/validUsername.js";
 
 export const userGetUserProfile = async (req, res) => {
   const { username } = req.params;
+  const userId = req.user._id;
 
   try {
+    let isFollowing = "Follow";
+    const currentUser = await User.findById(userId);
     const user = await User.findOne({ username })
       .select("-password")
       .select("-resetpasswordOtp");
@@ -17,10 +20,24 @@ export const userGetUserProfile = async (req, res) => {
       });
     }
 
+    if (!currentUser) {
+      return res.status(404).json({
+        status: "error",
+        message: "Your session have been terminated. Please log in again.",
+      });
+    }
+
+    if (currentUser && currentUser?.followings.includes(user._id)) {
+      isFollowing = "Unfollow";
+    } else {
+      isFollowing = "Follow";
+    }
+
     return res.status(200).json({
       status: "success",
       message: "username fetched successfully.",
       data: user,
+      isFollowing: isFollowing,
     });
   } catch (error) {
     console.log(
@@ -89,6 +106,51 @@ export const userFollowUnfollowUser = async (req, res) => {
         message: "User followed successfully",
         type: "Unfollow",
         show: true,
+      });
+    }
+  } catch (error) {
+    console.log(
+      `userFollowUnfollowUser Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const userRemoveUser = async (req, res) => {
+  try {
+    const { followerId } = req.body;
+    const userToModify = await User.findById(followerId);
+    const currentUser = await User.findById(req.user._id);
+
+    if (followerId === req.user._id.toString()) {
+      res.status(400).json({
+        status: "error",
+        message: "This action is restricted.",
+      });
+    }
+
+    if (!currentUser || !userToModify) {
+      res.status(400).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    const isFollower = currentUser.followers.includes(followerId);
+
+    if (isFollower) {
+      await User.findByIdAndUpdate(followerId, {
+        $pull: { followings: req.user._id },
+      });
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { followers: followerId },
+      });
+      res.status(200).json({
+        status: "success",
+        message: "User remmoved successfully",
       });
     }
   } catch (error) {
