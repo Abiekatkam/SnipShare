@@ -5,7 +5,7 @@ export const getNotifications = async (req, res) => {
     const userId = req.user._id;
     const notifications = await Notification.find({ to: userId }).populate({
       path: "from",
-      select: "username profileImage",
+      select: "fullname username profileImage createdAt",
     });
 
     await Notification.updateMany({ to: userId }, { read: true });
@@ -49,7 +49,7 @@ export const deleteNotifications = async (req, res) => {
 export const deleteSingleNotification = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { notifyId } = req.params;
+    const { notifyId } = req.body;
 
     const notification = await Notification.findById(notifyId);
 
@@ -60,7 +60,7 @@ export const deleteSingleNotification = async (req, res) => {
       });
     }
 
-    if (notification.toString() !== userId.toString()) {
+    if (notification?.to.toString() !== userId.toString()) {
       res.status(404).json({
         status: "error",
         message: "You don't have this access.",

@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.get("/", restrictedRoute, getNotifications);
-router.delete("/", restrictedRoute, deleteNotifications);
-router.delete("/:notifyId", restrictedRoute, deleteSingleNotification);
+router.post("/", restrictedRoute, deleteNotifications);
+router.post("/single", restrictedRoute, deleteSingleNotification);
 
 export default router;

@@ -2,17 +2,19 @@ import React from "react";
 import CreatePostModal from "../modals/CreatePostModal";
 import AccountSmCard from "../cards/AccountSmCard";
 import { CopyrightYear } from "../constants/Urls";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import AccountSmCardSkeleton from "../loaders/AccountSmCardSkeleton";
+import { toast } from "react-toastify";
 
 const WhoToFollow = ({ createPostVisible = false }) => {
+  const queryClient = useQueryClient();
+
   const { data: authorisedGetSuggestedUser, isLoading } = useQuery({
     queryKey: ["authorisedGetSuggestedUser"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/users/suggested-profile");
         const responseData = await response.json();
-        console.log(responseData?.data);
         if (responseData?.status == "error") {
           return null;
         }
@@ -26,6 +28,30 @@ const WhoToFollow = ({ createPostVisible = false }) => {
     },
     retry: false,
   });
+
+  const handleUnfollowFollowingList = async (userIdToUnfollow) => {
+    try {
+      const response = await fetch("/api/users/follow", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ followerId: userIdToUnfollow }),
+      });
+
+      const data = await response.json();
+      if (data.status == "success") {
+        queryClient.invalidateQueries({
+          queryKey: ["authorisedGetSuggestedUser"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["authorisedCurrentUser"],
+        });
+      }
+    } catch (error) {
+      toast.error("Error unfollowing user:", error.message);
+    }
+  };
 
   return (
     <div className="flex-[3_3_0] w-20 max-w-96 min-h-screen">
@@ -42,7 +68,12 @@ const WhoToFollow = ({ createPostVisible = false }) => {
                 <AccountSmCardSkeleton count={4} />
               ) : (
                 authorisedGetSuggestedUser?.map((user) => (
-                  <AccountSmCard type="follow" key={user._id} data={user} />
+                  <AccountSmCard
+                    type="Follow"
+                    key={user._id}
+                    data={user}
+                    handleFollowClick={handleUnfollowFollowingList}
+                  />
                 ))
               )}
             </div>
