@@ -1,7 +1,6 @@
 import express from "express";
 import {
   authChangePassword,
-  authChangePrivacy,
   authCurrentUser,
   authForgotPassword,
   authLogin,
@@ -27,7 +26,5 @@ router.post("/forgot-password", authForgotPassword);
 router.post("/reset-password", authResetPassword);
 // auth change password route
 router.post("/change-password", authChangePassword);
-// auth change password route
-router.post("/change-privacy", authChangePrivacy);
 
 export default router;

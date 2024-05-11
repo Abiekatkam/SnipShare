@@ -1,8 +1,6 @@
 import React from "react";
-import AccountPrivacy from "./AccountPrivacy";
 import ChangePassword from "./ChangePassword";
 import Appearance from "./Appearance";
-import BlockedAccount from "./BlockedAccount";
 import DeleteAccount from "./DeleteAccount";
 
 const SettingPage = () => {
@@ -17,11 +15,9 @@ const SettingPage = () => {
 
         <div className="mt-6 w-full overflow-x-auto p-4 pt-3">
           <div className="m-auto flex w-full max-w-2xl flex-col items-center space-y-6">
-            <AccountPrivacy/>
-            <Appearance/>
-            <ChangePassword/>
-            <BlockedAccount/>
-            <DeleteAccount/>
+            <Appearance />
+            <ChangePassword />
+            <DeleteAccount />
           </div>
         </div>
       </div>

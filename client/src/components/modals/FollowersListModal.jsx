@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -9,11 +10,13 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import SuggestedUserCard from "../cards/SuggestedUserCard";
+import { Button } from "../ui/button";
 
-const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
+const FollowersListModal = ({ FollowersCount, UserId, isCurrentUser }) => {
   const { data: authenticatedUser } = useQuery({
     queryKey: ["authorisedCurrentUser"],
   });
+  const followerListModalCloseRef = useRef(null);
 
   const [fetchFollowersList, setFetchFollowersList] = useState([]);
   const queryClient = useQueryClient();
@@ -57,15 +60,17 @@ const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
           queryKey: ["authorisedCurrentUser"],
         });
       }
-  
-      const updatedFollowerList = fetchFollowersList.filter(user => user._id !== userIdToUnfollow);
+
+      const updatedFollowerList = fetchFollowersList.filter(
+        (user) => user._id !== userIdToUnfollow
+      );
       setFetchFollowersList(updatedFollowerList);
     } catch (error) {
       toast.error("Error unfollowing user:", error.message);
     }
   };
 
-  return !isAccountPrivate ? (
+  return (
     <Dialog>
       <DialogTrigger
         asChild
@@ -90,9 +95,29 @@ const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
 
         <div className="w-full max-h-[500px] h-fit min-h-[350px] overflow-y-scroll flex flex-col items-start justify-start gap-1">
           {fetchFollowersList.length > 0 ? (
-            fetchFollowersList?.map((users) => (
-              <SuggestedUserCard key={users._id} data={users} handleUnfollow={handleUnfollowFollowerList} type="Remove" />
-            ))
+            isCurrentUser ? (
+              fetchFollowersList?.map((users) => (
+                <SuggestedUserCard
+                  key={users._id}
+                  data={users}
+                  handleUnfollow={handleUnfollowFollowerList}
+                  requestType="Remove"
+                  listType="followers"
+                  reference={followerListModalCloseRef}
+                />
+              ))
+            ) : (
+              fetchFollowersList?.map((users) => (
+                <SuggestedUserCard
+                  key={users._id}
+                  data={users}
+                  handleUnfollow={handleUnfollowFollowerList}
+                  requestType={null}
+                  listType="followers"
+                  reference={followerListModalCloseRef}
+                />
+              ))
+            )
           ) : (
             <p className="w-fit m-auto text-pretty text-center px-6 text-md">
               Don't let the number zero discourage you! Every journey begins
@@ -103,17 +128,18 @@ const FollowersListModal = ({ FollowersCount, UserId, isAccountPrivate }) => {
             </p>
           )}
         </div>
+        <DialogClose asChild>
+          <Button
+            type="button"
+            variant="secondary"
+            className="hidden"
+            ref={followerListModalCloseRef}
+          >
+            Close
+          </Button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
-  ) : (
-    <div className="w-fit flex items-center">
-      <p className="text-sm flex items-center gap-1 text-slate-500 dark:text-slate-400">
-        <span className="font-semibold text-[#09090b] dark:text-white">
-          {FollowersCount}
-        </span>{" "}
-        Followers
-      </p>
-    </div>
   );
 };
 

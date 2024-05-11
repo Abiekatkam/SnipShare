@@ -6,8 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import AccountSmCardSkeleton from "../loaders/AccountSmCardSkeleton";
 
 const WhoToFollow = ({ createPostVisible = false }) => {
-
-  const { data: authorisedGetSuggestedUser, isLoading} = useQuery({
+  const { data: authorisedGetSuggestedUser, isLoading } = useQuery({
     queryKey: ["authorisedGetSuggestedUser"],
     queryFn: async () => {
       try {
@@ -33,20 +32,27 @@ const WhoToFollow = ({ createPostVisible = false }) => {
       <div className="sticky top-0 left-0 h-screen flex flex-col w-20 md:w-full p-4">
         {/* suggested users */}
 
-        <div className="w-full h-fit border border-slate-300 dark:border-slate-500 rounded-xl p-3 flex flex-col items-start gap-3">
-          <h1 className="text-xl font-bold text-[#09090b] dark:text-slate-50">
-            Who to follow
-          </h1>
-          <div className="w-full max-h-[328px] h-fit overflow-y-scroll flex flex-col justify-start">
-            {isLoading ? (
-              <AccountSmCardSkeleton count={4} />
-            ) : (
-              authorisedGetSuggestedUser?.map((user) => (
-                <AccountSmCard type="follow" key={user._id} data={user} />
-              ))
-            )}
+        {authorisedGetSuggestedUser?.length > 0 ? (
+          <div className="w-full h-fit border border-slate-300 dark:border-slate-500 rounded-xl p-3 flex flex-col items-start gap-3">
+            <h1 className="text-xl font-bold text-[#09090b] dark:text-slate-50">
+              Who to follow
+            </h1>
+            <div className="w-full max-h-[328px] h-fit overflow-y-scroll flex flex-col justify-start">
+              {isLoading ? (
+                <AccountSmCardSkeleton count={4} />
+              ) : (
+                authorisedGetSuggestedUser?.map((user) => (
+                  <AccountSmCard type="follow" key={user._id} data={user} />
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full h-fit border border-slate-300 dark:border-slate-500 rounded-xl p-3 flex flex-col items-start gap-3 text-pretty text-center">
+            Share your story, inspire the world. Snipshare: where every moment
+            becomes a masterpiece.
+          </div>
+        )}
 
         {createPostVisible && (
           <div className="mt-5 w-full">

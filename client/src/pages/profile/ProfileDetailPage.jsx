@@ -98,7 +98,7 @@ const ProfileDetailPage = () => {
                 </span>
               </div>
 
-              {isLinkPresent && !authorisedUserProfile?.isAccountPrivate && (
+              {isLinkPresent && (
                 <ProfilePageLinks authenticatedUser={authorisedUserProfile} />
               )}
 
@@ -112,35 +112,18 @@ const ProfileDetailPage = () => {
                 <FollowersListModal
                   FollowersCount={authorisedUserProfile?.followers?.length}
                   UserId={authorisedUserProfile?._id}
-                  isAccountPrivate={authorisedUserProfile?.isAccountPrivate}
                 />
                 <FollowingListModal
                   FollowingCount={authorisedUserProfile?.followings?.length}
                   UserId={authorisedUserProfile?._id}
-                  isAccountPrivate={authorisedUserProfile?.isAccountPrivate}
+                  isCurrentUser={false}
                 />
               </div>
             </div>
           </div>
 
           {/* personal feed */}
-          {authorisedUserProfile?.isAccountPrivate ? (
-            <div className="w-full flex items-center justify-center h-[196px] mt-2 rounded-md bg-slate-100 dark:bg-[#27272a]">
-              <div className="w-fit h-fit flex flex-col items-center">
-                <span className="text-2xl text-slate-500 p-4 rounded-full ring-2 ring-slate-500 dark:text-slate-200 dark:ring-slate-200">
-                  <FaLock />
-                </span>
-                <h1 className="text-lg font-semibold text-slate-600 mt-2 mb-0 dark:text-slate-300">
-                  This account is private
-                </h1>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Follow to see their feeds.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <></>
-          )}
+          <></>
         </div>
       </div>
       <WhoToFollow />

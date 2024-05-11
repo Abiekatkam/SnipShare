@@ -96,7 +96,8 @@ export const authLogin = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         status: "error",
-        message: "No user found with this email address. Please register yourself.",
+        message:
+          "No user found with this email address. Please register yourself.",
       });
     }
     if (!isPasswordValid || !user) {
@@ -301,11 +302,12 @@ export const authChangePassword = async (req, res) => {
         message: "Password length should more than 8 and less than 17",
       });
     }
-    
+
     if (!isPasswordValid) {
       return res.status(400).json({
         status: "error",
-        message: "Current password didn't matched. Please enter a valid password",
+        message:
+          "Current password didn't matched. Please enter a valid password",
       });
     }
 
@@ -325,36 +327,6 @@ export const authChangePassword = async (req, res) => {
   } catch (error) {
     console.log(
       `authChangePassword Controller : Something went wrong. ${error.message}`
-    );
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-};
-
-export const authChangePrivacy = async (req, res) => {
-  try {
-    const { email, isAccountPrivate } = req.body;
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({
-        status: "error",
-        message: "No user found",
-      });
-    }
-    user.isAccountPrivate = isAccountPrivate;
-
-    user = await user.save();
-    user.password = null;
-    return res.status(200).json({
-      status: "success",
-      message: "Account privacy changed successfully",
-      data: user,
-    });
-  } catch (error) {
-    console.log(
-      `authChangePrivacy Controller : Something went wrong. ${error.message}`
     );
     res.status(500).json({
       status: "error",

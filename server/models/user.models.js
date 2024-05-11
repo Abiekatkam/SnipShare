@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-
     fullname: {
       type: String,
       required: true,
@@ -71,13 +70,6 @@ const userSchema = new mongoose.Schema(
         default: [],
       },
     ],
-    blockedAccount: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "User", default: [] },
-    ],
-    isAccountPrivate: {
-      type: Boolean,
-      default: false,
-    },
     resetpasswordOtp: { type: String },
   },
   { timestamps: true },
