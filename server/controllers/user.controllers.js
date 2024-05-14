@@ -201,6 +201,43 @@ export const userGetSuggestedProfile = async (req, res) => {
   }
 };
 
+export const userGetAllSuggestedProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const userFollowedByMe = await User.findById(userId).select("followings");
+
+    const users = await User.aggregate([
+      {
+        $match: {
+          _id: { $ne: userId },
+        },
+      },
+      { $sample: { size: 10 } },
+    ]);
+
+    const filteredUser = users.filter(
+      (user) => !userFollowedByMe.followings.includes(user._id)
+    );
+
+    const suggestedUser = filteredUser.slice(0, 12);
+    suggestedUser.forEach(
+      (user) => ((user.password = null), (user.resetpasswordOtp = null))
+    );
+
+    return res.status(200).json({
+      data: suggestedUser,
+    });
+  } catch (error) {
+    console.log(
+      `userGetSuggestedProfile Controller : Something went wrong. ${error.message}`
+    );
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
 export const userUpdateProfile = async (req, res) => {
   let {
     fullname,

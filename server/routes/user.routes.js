@@ -5,6 +5,7 @@ import {
   userFollowUnfollowUser,
   userFollowersList,
   userFollowingsList,
+  userGetAllSuggestedProfile,
   userGetSuggestedProfile,
   userGetUserProfile,
   userRemoveUser,
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.get("/profile/:username", restrictedRoute, userGetUserProfile);
 router.get("/suggested-profile", restrictedRoute, userGetSuggestedProfile);
+router.get("/all-suggested-profile", restrictedRoute, userGetAllSuggestedProfile);
 router.post("/followers-list", restrictedRoute, userFollowersList);
 router.post("/following-list", restrictedRoute, userFollowingsList);
 router.post("/follow", restrictedRoute, userFollowUnfollowUser);

@@ -23,7 +23,7 @@ import {
   FaRegUser,
   FaRegCalendarAlt,
 } from "react-icons/fa";
-import { MdOutlineMail } from "react-icons/md";
+import { MdOutlineMail, MdSearch } from "react-icons/md";
 import { SunIcon, MoonIcon } from "lucide-react";
 import { IoImageOutline, IoClose } from "react-icons/io5";
 import { TbCameraPlus } from "react-icons/tb";
@@ -57,4 +57,5 @@ export {
   TbCameraPlus,
   FaLock,
   FaTrashCan,
+  MdSearch,
 };
