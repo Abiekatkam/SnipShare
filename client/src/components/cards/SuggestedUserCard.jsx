@@ -50,7 +50,7 @@ const SuggestedUserCard = ({
   };
 
   return (
-    <div className="w-full flex items-center justify-between gap-3 rounded-xl p-2 px-3 font-semibold text-lg tracking-wide dark:text-white transition-all bg-slate-200 text-[#09090b] ease-in dark:bg-[#27272a]/50 mb-2">
+    <div className="w-full flex items-start justify-between gap-3 rounded-xl p-2 px-3 font-semibold text-lg tracking-wide dark:text-white transition-all bg-slate-200 text-[#09090b] ease-in dark:bg-[#27272a]/50 mb-2">
       <Link
         to={`/profile/${data?.username}`}
         className="w-fit flex items-start gap-2"

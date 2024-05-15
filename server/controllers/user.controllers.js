@@ -204,28 +204,17 @@ export const userGetSuggestedProfile = async (req, res) => {
 export const userGetAllSuggestedProfile = async (req, res) => {
   try {
     const userId = req.user._id;
-    const userFollowedByMe = await User.findById(userId).select("followings");
-
     const users = await User.aggregate([
       {
         $match: {
           _id: { $ne: userId },
         },
       },
-      { $sample: { size: 10 } },
+      { $sample: { size: 20 } },
     ]);
 
-    const filteredUser = users.filter(
-      (user) => !userFollowedByMe.followings.includes(user._id)
-    );
-
-    const suggestedUser = filteredUser.slice(0, 12);
-    suggestedUser.forEach(
-      (user) => ((user.password = null), (user.resetpasswordOtp = null))
-    );
-
     return res.status(200).json({
-      data: suggestedUser,
+      data: users,
     });
   } catch (error) {
     console.log(
@@ -441,6 +430,54 @@ export const userFollowingsList = async (req, res) => {
     });
   } catch (error) {
     console.log(`userFollowingsList Controller : ${error.message}`);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const userSearchProfile = async (req, res) => {
+  const { username } = req.params;
+  const userId = req.user._id;
+
+  try {
+    let isFollowing = "Follow";
+    const currentUser = await User.findById(userId);
+    const user = await User.find({ username: { $regex: username, $options: "i" } })
+      .select("-password")
+      .select("-resetpasswordOtp");
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    if (!currentUser) {
+      return res.status(404).json({
+        status: "error",
+        message: "Your session have been terminated. Please log in again.",
+      });
+    }
+
+    if (currentUser && currentUser?.followings.includes(user._id)) {
+      isFollowing = "Unfollow";
+    } else {
+      isFollowing = "Follow";
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "username fetched successfully.",
+      data: user,
+      isFollowing: isFollowing,
+    });
+  } catch (error) {
+    console.log(
+      `userGetUserProfile Controller : Something went wrong. ${error.message}`
+    );
     res.status(500).json({
       status: "error",
       message: "Internal Server Error",

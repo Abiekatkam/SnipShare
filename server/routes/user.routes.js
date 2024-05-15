@@ -9,12 +9,14 @@ import {
   userGetSuggestedProfile,
   userGetUserProfile,
   userRemoveUser,
+  userSearchProfile,
   userUpdateProfile,
 } from "../controllers/user.controllers.js";
 
 const router = express.Router();
 
 router.get("/profile/:username", restrictedRoute, userGetUserProfile);
+router.get("/search-profile/:username", restrictedRoute, userSearchProfile);
 router.get("/suggested-profile", restrictedRoute, userGetSuggestedProfile);
 router.get("/all-suggested-profile", restrictedRoute, userGetAllSuggestedProfile);
 router.post("/followers-list", restrictedRoute, userFollowersList);
