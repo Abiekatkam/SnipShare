@@ -3,6 +3,7 @@ import { MdSearch } from "@/components/constants/Icons";
 import { useQuery } from "@tanstack/react-query";
 import AccountSmCardSkeleton from "@/components/loaders/AccountSmCardSkeleton";
 import AccountSmCard from "@/components/cards/AccountSmCard";
+import SearchedUserCard from "@/components/cards/SearchedUserCard";
 
 const ExplorePage = () => {
   const [searchParam, setSearchParam] = useState("");
@@ -68,12 +69,22 @@ const ExplorePage = () => {
                 placeholder="Search username ...."
               />
             </div>
-            {searchParam.length > 2 && (
+            {searchParam.length > 0 && (
               <p className="w-full flex flex-row items-center gap-2 text-sm text-slate-500 font-semibold">
                 Searching
                 <span className="font-bold text-md">@{searchParam}</span>
               </p>
             )}
+
+            {searchParam.length !== 0 ? (
+              searchedUser.length > 0 ? (
+                searchedUser.map((user) => (
+                  <SearchedUserCard key={user?._id} data={user} />
+                ))
+              ) : (
+                <p>No user found!</p>
+              )
+            ) : null}
             <div className="w-full h-full max-h-[450px] pr-2 overflow-y-scroll flex flex-col items-start gap-2"></div>
             <p className="w-full flex flex-row items-center text-sm capitalize text-slate-500 font-semibold">
               all suggested users
@@ -83,13 +94,7 @@ const ExplorePage = () => {
                 <AccountSmCardSkeleton count={6} />
               ) : (
                 authorisedGetAllSuggestedUser?.map((user) => (
-                  <AccountSmCard
-                    type="Follow"
-                    key={user._id}
-                    data={user}
-                    handleFollowClick={""}
-                    isBioVisible={true}
-                  />
+                  <SearchedUserCard key={user._id} data={user} />
                 ))
               )}
             </div>

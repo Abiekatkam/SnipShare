@@ -444,7 +444,9 @@ export const userSearchProfile = async (req, res) => {
   try {
     let isFollowing = "Follow";
     const currentUser = await User.findById(userId);
-    const user = await User.find({ username: { $regex: username, $options: "i" } })
+    const user = await User.find({
+      username: { $regex: username, $options: "i" },
+    })
       .select("-password")
       .select("-resetpasswordOtp");
 
