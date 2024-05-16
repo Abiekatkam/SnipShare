@@ -15,6 +15,9 @@ import {
   FaRegFaceSmile,
   FaLock,
   FaTrashCan,
+  FaRegHeart,
+  FaHeart,
+  FaRegCommentDots,
 } from "react-icons/fa6";
 import {
   FaHome,
@@ -58,4 +61,7 @@ export {
   FaLock,
   FaTrashCan,
   MdSearch,
+  FaRegHeart,
+  FaHeart,
+  FaRegCommentDots 
 };

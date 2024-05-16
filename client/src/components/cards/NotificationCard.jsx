@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaTrashCan } from "@/components/constants/Icons";
+import { getRelativeTime } from "../constants/DateFormat";
 
 const NotificationCard = ({ notify, handleSingleNotification }) => {
   let message =
@@ -27,6 +28,7 @@ const NotificationCard = ({ notify, handleSingleNotification }) => {
             </span> */}
         </Link>
         <span className="text-sm font-normal">{message}</span>
+        <span className="text-xs text-slate-600 dark:text-slate-300"> {getRelativeTime(notify?.createdAt)}</span>
       </div>
       <span
         className="text-sm text-slate-600 dark:text-slate-300 hidden group-hover:block cursor-pointer"

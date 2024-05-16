@@ -1,9 +1,32 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
+import PostCard from "@/components/cards/PostCard";
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const RootPage = () => {
   const [feedType, setFeedType] = useState("ForYou");
 
+  const { data: getAllPostFeed } = useQuery({
+    queryKey: ["getAllPostFeed"],
+    queryFn: async () => {
+      try {
+        const response = await fetch("/api/posts/all");
+        const responseData = await response.json();
+        if (responseData?.status == "error") {
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error(responseData.message || "Something went wrong!");
+        }
+        return responseData;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    retry: false,
+  });
+
+  console.log(getAllPostFeed);
   return (
     <>
       <div className="md:flex-[4_4_0] mr-auto border-r border-slate-300 dark:border-slate-500  min-h-screen p-4 pt-0">
@@ -38,7 +61,11 @@ const RootPage = () => {
           </div>
         </div>
 
-        <div className="mt-4 overflow-y-scroll h-fit">{/* feeds */}</div>
+        <div className="mt-4 overflow-y-scroll h-fit pr-1">
+          {getAllPostFeed && getAllPostFeed.map((post)=>(
+            <PostCard key={post._id} posts={post}/>
+          ))}
+        </div>
       </div>
       <WhoToFollow createPostVisible={true} />
     </>

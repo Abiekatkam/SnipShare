@@ -5,7 +5,7 @@ import Notification from "../models/notification.models.js";
 
 export const createPost = async (req, res) => {
   try {
-    const { text } = req.bodyl;
+    const { description: text } = req.body;
     let { image } = req.body;
     const userId = req.user._id.toString();
     const user = await User.findById(userId);
@@ -157,6 +157,7 @@ export const likeUnlikePost = async (req, res) => {
       await User.updateOne({ _id: userId }, { $pull: { likedPosts: postId } });
       return res.status(200).json({
         status: "success",
+        type: true,
         message: "Post unliked successfully.",
       });
     } else {
@@ -173,6 +174,7 @@ export const likeUnlikePost = async (req, res) => {
       await newNotification.save();
       return res.status(200).json({
         status: "success",
+        type: false,
         message: "Post liked successfully.",
       });
     }
@@ -193,7 +195,7 @@ export const getAllPosts = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate({
         path: "user",
-        select: "-passowrd",
+        select: "-password",
       })
       .populate({
         path: "comments.user",

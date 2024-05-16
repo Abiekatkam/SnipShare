@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import CreatePostForm from "@/components/forms/CreatePostForm";
 
 const CreatePostModal = () => {
+  const createPostModalRef = useRef(null);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -27,8 +29,13 @@ const CreatePostModal = () => {
           </DialogDescription>
         </DialogHeader>
         <div className="w-full min-h-[212px] h-full">
-          <CreatePostForm />
+          <CreatePostForm reference={createPostModalRef} />
         </div>
+        <DialogClose asChild>
+            <Button type="button" variant="secondary" className="hidden" ref={createPostModalRef}> 
+              Close
+            </Button>
+          </DialogClose>
       </DialogContent>
     </Dialog>
   );

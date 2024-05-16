@@ -3,10 +3,12 @@ import Notification from "../models/notification.models.js";
 export const getNotifications = async (req, res) => {
   try {
     const userId = req.user._id;
-    const notifications = await Notification.find({ to: userId }).populate({
-      path: "from",
-      select: "fullname username profileImage createdAt",
-    });
+    const notifications = await Notification.find({ to: userId })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "from",
+        select: "fullname username profileImage createdAt",
+      });
 
     await Notification.updateMany({ to: userId }, { read: true });
 

@@ -5,17 +5,26 @@ import Avatar from "/avatar-placeholder.png";
 import { Separator } from "../ui/separator";
 import { IoImageOutline, IoClose } from "@/components/constants/Icons";
 import SpinLoader from "../loaders/SpinLoader";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Alert, AlertDescription } from "../ui/alert";
 import { BiError } from "react-icons/bi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
-const CreatePostForm = () => {
+const CreatePostForm = ({ reference }) => {
+  const queryClient = useQueryClient();
+
   const [formState, setFormState] = useState({
     description: "",
+    image: "",
   });
   const [source, setSource] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isTruncateMessage, setIsTruncateMessage] = useState(false);
   const [isValidFeed, setIsValidFeed] = useState(false);
+
+  const { data: authenticatedUser } = useQuery({
+    queryKey: ["authorisedCurrentUser"],
+  });
 
   const maxDescriptionLength = 250;
   const remainingChars = maxDescriptionLength - formState.description.length;
@@ -24,9 +33,34 @@ const CreatePostForm = () => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    formState.image = previewUrl;
+    CreatePostMutation(formState);
   };
+
+  const { mutate: CreatePostMutation, isPending } = useMutation({
+    mutationFn: async (formState) => {
+      try {
+        const response = await fetch("/api/posts/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formState),
+        });
+        await response.json();
+        queryClient.invalidateQueries({
+          queryKey: ["getAllPostFeed"],
+        });
+        if (!isPending) {
+          reference.current.click();
+        }
+      } catch (error) {
+        toast.error("Something went wrong! Please try again.");
+      }
+    },
+  });
 
   const imageFileInputRef = useRef(null);
   const loader = false;
@@ -76,9 +110,9 @@ const CreatePostForm = () => {
       <div className="w-full h-full flex flex-row items-start justify-start gap-2">
         <div className="w-fit h-full flex items-start flex-col">
           <img
-            src={Avatar}
-            alt=""
-            className="w-11 h-11 rounded-full object-contain"
+            src={authenticatedUser?.profileImage || Avatar}
+            alt={authenticatedUser?.fullname}
+            className="w-11 h-11 rounded-full object-cover"
           />
         </div>
         <div className="w-[90%] h-fit max-h-[340px] flex items-start flex-col overflow-y-scroll gap-2">
@@ -127,6 +161,7 @@ const CreatePostForm = () => {
             onChange={handleImageFileChange}
           />
           <button
+            type="button"
             className="w-8 h-8 text-2xl flex items-center justify-center text-slate-600 dark:text-slate-400 dark:hover:text-slate-50 hover:text-slate-800 transition-all ease-in duration-200"
             onClick={handleImageFileClick}
           >
@@ -149,9 +184,9 @@ const CreatePostForm = () => {
           )}
           <Button
             className="h-9 font-semibold"
-            disabled={loader || isTruncateMessage || !isValidFeed}
+            disabled={isPending || isTruncateMessage || !isValidFeed}
           >
-            {loader ? <SpinLoader /> : "Post"}
+            {isPending ? <SpinLoader /> : "Post"}
           </Button>
         </div>
       </div>
