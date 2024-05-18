@@ -2,7 +2,7 @@
 A simple social media platform using MERN stack and other technologies.
 
 ## Tech stacks
-1. MERN [MonogoDB, ExpressJS, ReactJS, NodeJS]
+1. MERN [MongoDB, ExpressJS, ReactJS, NodeJS]
 2. Shadcn ui (for better UI components) [preview site](https://ui.shadcn.com/)
 3. Tailwind Css (CSS purpose) [preview site](https://tailwindcss.com/)
 4. Cloudinary (for image and video processing and storage) [preview site](https://cloudinary.com/)
