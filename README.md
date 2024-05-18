@@ -16,7 +16,7 @@ A simple social media platform using MERN stack and other technologies.
 5. Deleting Posts
 6. Commenting on Posts
 7. Liking Posts
-8. Delete Posts (if you are the owner)
+8. Deleting Comments
 9. Edit Profile Info
 10. Edit Cover Image and Profile Image
 11. Image Uploads using Cloudinary
