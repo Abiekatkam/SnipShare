@@ -1,12 +1,13 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
 import PostCard from "@/components/cards/PostCard";
+import PostCardLoader from "@/components/loaders/PostCardLoader";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const RootPage = () => {
   const [feedType, setFeedType] = useState("ForYou");
 
-  const { data: getAllPostFeed } = useQuery({
+  const { data: getAllPostFeed, isLoading: isAllPostFeedLoading } = useQuery({
     queryKey: ["getAllPostFeed"],
     queryFn: async () => {
       try {
@@ -26,7 +27,31 @@ const RootPage = () => {
     retry: false,
   });
 
+  const {
+    data: getAllFollowingPostFeed,
+    isLoading: isAllFollowingPostFeedLoading,
+  } = useQuery({
+    queryKey: ["getAllFollowingPostFeed"],
+    queryFn: async () => {
+      try {
+        const response = await fetch("/api/posts/following");
+        const responseData = await response.json();
+        if (responseData?.status == "error") {
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error(responseData.message || "Something went wrong!");
+        }
+        return responseData?.data;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    retry: false,
+  });
+
   console.log(getAllPostFeed);
+  console.log(getAllFollowingPostFeed);
   return (
     <>
       <div className="md:flex-[4_4_0] mr-auto border-r border-slate-300 dark:border-slate-500  min-h-screen p-4 pt-0">
@@ -61,11 +86,31 @@ const RootPage = () => {
           </div>
         </div>
 
-        <div className="mt-4 overflow-y-scroll h-fit pr-1">
-          {getAllPostFeed && getAllPostFeed.map((post)=>(
-            <PostCard key={post._id} posts={post}/>
-          ))}
-        </div>
+        {feedType == "ForYou" && (
+          <div className="mt-4 h-fit pr-1">
+            {isAllPostFeedLoading ? (
+              <PostCardLoader count={4} />
+            ) : (
+              getAllPostFeed &&
+              getAllPostFeed.map((post) => (
+                <PostCard key={post._id} posts={post} />
+              ))
+            )}
+          </div>
+        )}
+
+        {feedType == "Following" && (
+          <div className="mt-4 h-fit pr-1">
+            {isAllFollowingPostFeedLoading ? (
+              <PostCardLoader count={4} />
+            ) : (
+              getAllFollowingPostFeed &&
+              getAllFollowingPostFeed.map((post) => (
+                <PostCard key={post._id} posts={post} />
+              ))
+            )}
+          </div>
+        )}
       </div>
       <WhoToFollow createPostVisible={true} />
     </>

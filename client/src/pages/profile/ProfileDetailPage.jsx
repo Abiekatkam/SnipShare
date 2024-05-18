@@ -9,6 +9,8 @@ import FollowingListModal from "@/components/modals/FollowingListModal";
 import ProfileFollowUnfollow from "./ProfileFollowUnfollow";
 import { Button } from "@/components/ui/button";
 import SpinLoader from "@/components/loaders/SpinLoader";
+import PostCardLoader from "@/components/loaders/PostCardLoader";
+import PostCard from "@/components/cards/PostCard";
 
 const ProfileDetailPage = () => {
   let { username } = useParams();
@@ -27,6 +29,26 @@ const ProfileDetailPage = () => {
     setAuthorisedUserProfile(responseData?.data);
     setIsFollowing(responseData?.isFollowing);
   };
+
+  const { data: getUserPostFeed, isLoading } = useQuery({
+    queryKey: ["getUserPostFeed"],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`/api/posts/user/${username}`);
+        const responseData = await response.json();
+        if (responseData?.status == "error") {
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error(responseData.message || "Something went wrong!");
+        }
+        return responseData?.data;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    retry: false,
+  });
 
   useEffect(() => {
     if (authenticatedUser.username === username) {
@@ -123,7 +145,24 @@ const ProfileDetailPage = () => {
           </div>
 
           {/* personal feed */}
-          <></>
+          <div className="w-full h-fit flex flex-col mt-4">
+            {getUserPostFeed?.length == 0 ? (
+              <div className="w-full px-10 h-[240px] flex items-center justify-center bg-slate-100 dark:bg-[#27272a] rounded-md flex-col">
+                <h2 className="text-lg font-bold">No post yet</h2>
+                <p className="text-center text-pretty">
+                  This user hasn't shared any posts yet. Stay tuned! They might
+                  be gearing up to share something amazing soon.
+                </p>
+              </div>
+            ) : isLoading ? (
+              <PostCardLoader count={1} />
+            ) : (
+              getUserPostFeed &&
+              getUserPostFeed.map((post) => (
+                <PostCard key={post._id} posts={post} />
+              ))
+            )}
+          </div>
         </div>
       </div>
       <WhoToFollow />

@@ -37,6 +37,15 @@ const PostCard = ({ posts }) => {
         queryClient.invalidateQueries({
           queryKey: ["getAllPostFeed"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["authorisedCurrentUser"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["getUserPostFeed"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["getUserLikedPost"],
+        });
       }
     } catch (error) {
       toast.error("Something went wrong! Please try again.");
@@ -44,29 +53,34 @@ const PostCard = ({ posts }) => {
   };
 
   return (
-    <div className="w-full h-fit rounded-md p-4 flex flex-row items-start justify-between bg-slate-50 hover:bg-slate-100 transition-all ease-in duration-200 mb-3">
+    <div className="w-full h-fit rounded-md p-4 flex flex-row items-start justify-between bg-slate-50 dark:bg-[#09090b] hover:bg-slate-100 transition-all dark:hover:bg-[#27272a] ease-in duration-200 mb-3">
       <div className="w-12 h-fit">
-        <Link to={`/profile/${posts?.user?.username}`}>
+        {posts?.user?._id == authenticatedUser?._id ? (
           <img
             src={posts?.user?.profileImage || "/avatar-placeholder.png"}
             alt={posts?.user?.fullname}
             className="w-11 h-11 rounded-full object-cover"
           />
-        </Link>
+        ) : (
+          <Link to={`/profile/${posts?.user?.username}`}>
+            <img
+              src={posts?.user?.profileImage || "/avatar-placeholder.png"}
+              alt={posts?.user?.fullname}
+              className="w-11 h-11 rounded-full object-cover"
+            />
+          </Link>
+        )}
       </div>
       <div className="w-[90%] h-full flex flex-col items-start">
         <div className="w-full h-fit flex flex-row justify-start items-start">
-          <Link
-            to={`/profile/${posts?.user?.username}`}
-            className="w-fit h-fit flex flex-col gap-0"
-          >
-            <h1 className="text-md font-bold text-[#09090a] capitalize">
+          <div className="w-fit h-fit flex flex-col gap-0">
+            <h1 className="text-md font-bold text-[#09090a] dark:text-white capitalize">
               {posts?.user?.fullname}
             </h1>
             <span className="text-xs text-slate-500 font-semibold">
               @{posts?.user?.username}
             </span>
-          </Link>
+          </div>
           <span className="text-xs text-slate-500 mt-1 ml-3 font-semibold">
             {getRelativeTime(posts?.createdAt)}
           </span>
@@ -88,18 +102,24 @@ const PostCard = ({ posts }) => {
           )}
         </div>
         <div className="w-full h-fit flex flex-row justify-end items-center gap-4 mt-4 border-t-2 border-slate-600/20 pt-1">
-          <div className="w-fit flex flex-row gap-1 items-center text-sm font-semibold text-slate-500 group cursor-pointer transition-all ease-in duration-200" onClick={handlePostLikesCount}>
+          <div
+            className="w-fit flex flex-row gap-1 items-center text-sm font-semibold text-slate-500 group cursor-pointer transition-all ease-in duration-200"
+            onClick={handlePostLikesCount}
+          >
             <span
               className={
-                isLiked ? "text-[#09090a] dark:text-white" : "group-hover:text-slate-900"
+                isLiked
+                  ? "text-[#09090a] dark:text-white"
+                  : "group-hover:text-slate-900"
               }
-              
             >
               {isLiked ? <FaHeart /> : <FaRegHeart />}
             </span>{" "}
             <span
               className={
-                isLiked ? "text-[#09090a]" : "group-hover:text-slate-900"
+                isLiked
+                  ? "text-[#09090a] dark:text-white"
+                  : "group-hover:text-slate-900"
               }
             >
               {posts?.likes?.length}

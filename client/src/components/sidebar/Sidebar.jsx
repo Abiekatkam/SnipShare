@@ -34,18 +34,12 @@ const siderbarlinks = [
   },
   {
     id: 4,
-    href: "/messages",
-    name: "Messages",
-    icon: <MdOutlineMail />,
-  },
-  {
-    id: 5,
     href: "/profile",
     name: "Profile",
     icon: <FaRegUser />,
   },
   {
-    id: 6,
+    id: 5,
     href: "/settings",
     name: "Settings",
     icon: <FaGear />,
@@ -116,7 +110,9 @@ const Sidebar = () => {
               className="w-10 h-10 rounded-full object-cover"
             />
             <div className="w-fit h-full flex flex-col items-start">
-              <h1 className="text-sm capitalize">{authenticatedUser.fullname}</h1>
+              <h1 className="text-sm capitalize">
+                {authenticatedUser.fullname}
+              </h1>
               <p className="text-xs text-slate-500">
                 @{authenticatedUser.username}
               </p>

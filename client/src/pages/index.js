@@ -6,7 +6,6 @@ import ErrorPage from "./error/ErrorPage";
 import SettingPage from "./setting/SettingPage";
 import ExplorePage from "./explore/ExplorePage";
 import NotificationPage from "./notification/NotificationPage";
-import MessagePage from "./message/MessagePage";
 import ProfilePage from "./profile/ProfilePage";
 import ProfileDetailPage from "./profile/ProfileDetailPage";
 
@@ -19,7 +18,6 @@ export {
   SettingPage,
   ExplorePage,
   NotificationPage,
-  MessagePage,
   ProfilePage,
-  ProfileDetailPage
+  ProfileDetailPage,
 };

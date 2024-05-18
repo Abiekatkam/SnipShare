@@ -4,7 +4,6 @@ import {
   ErrorPage,
   ExplorePage,
   LoginPage,
-  MessagePage,
   NotificationPage,
   ProfileDetailPage,
   ProfilePage,
@@ -24,7 +23,6 @@ const isRouteInList = (currentPath) => {
     "/",
     "/explore",
     "/notifications",
-    "/messages",
     "/settings",
     "/profile",
   ];
@@ -103,12 +101,6 @@ const App = () => {
               ) : (
                 <Navigate to="/login" />
               )
-            }
-          />
-          <Route
-            path="/messages"
-            element={
-              authorisedCurrentUser ? <MessagePage /> : <Navigate to="/login" />
             }
           />
           <Route
