@@ -1,11 +1,12 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
 import PostCard from "@/components/cards/PostCard";
 import PostCardLoader from "@/components/loaders/PostCardLoader";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const RootPage = () => {
   const [feedType, setFeedType] = useState("ForYou");
+  const queryClient = useQueryClient();
 
   const { data: getAllPostFeed, isLoading: isAllPostFeedLoading } = useQuery({
     queryKey: ["getAllPostFeed"],
@@ -19,6 +20,12 @@ const RootPage = () => {
         if (!response.ok) {
           throw new Error(responseData.message || "Something went wrong!");
         }
+        queryClient.invalidateQueries({
+          queryKey: ["getAllFollowingPostFeed"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["getAllPostFeed"],
+        });
         return responseData;
       } catch (error) {
         throw new Error(error.message);
@@ -42,6 +49,12 @@ const RootPage = () => {
         if (!response.ok) {
           throw new Error(responseData.message || "Something went wrong!");
         }
+        queryClient.invalidateQueries({
+          queryKey: ["getAllFollowingPostFeed"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["getAllPostFeed"],
+        });
         return responseData?.data;
       } catch (error) {
         throw new Error(error.message);
@@ -50,8 +63,6 @@ const RootPage = () => {
     retry: false,
   });
 
-  console.log(getAllPostFeed);
-  console.log(getAllFollowingPostFeed);
   return (
     <>
       <div className="md:flex-[4_4_0] mr-auto border-r border-slate-300 dark:border-slate-500  min-h-screen p-4 pt-0">
