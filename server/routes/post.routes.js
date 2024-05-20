@@ -4,6 +4,7 @@ import {
   commentOnPost,
   createPost,
   deletePost,
+  editPost,
   getAllFollowingPosts,
   getAllPosts,
   getLikedPost,
@@ -14,9 +15,10 @@ import {
 const router = express.Router();
 
 router.post("/create", restrictedRoute, createPost);
+router.post("/edit", restrictedRoute, editPost);
 router.post("/like/:postId", restrictedRoute, likeUnlikePost);
 router.post("/comment/:postId", restrictedRoute, commentOnPost);
-router.delete("/:postId", restrictedRoute, deletePost);
+router.post("/:postId", restrictedRoute, deletePost);
 router.get("/all", restrictedRoute, getAllPosts);
 router.get("/following", restrictedRoute, getAllFollowingPosts);
 router.get("/likes/:userId", restrictedRoute, getLikedPost);

@@ -16,7 +16,7 @@ export const createPost = async (req, res) => {
       });
     }
 
-    if (!text && !img) {
+    if (!text && !image) {
       return res.status(400).json({
         status: "error",
         message: "Post must have text or image",
@@ -52,9 +52,74 @@ export const createPost = async (req, res) => {
   }
 };
 
+export const editPost = async (req, res) => {
+  try {
+    const { description: text, sourceType, postId } = req.body;
+    let { image } = req.body;
+    const userId = req.user._id.toString();
+
+    const user = await User.findById(userId);
+    const post = await Post.findById(postId);
+
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+    if (!post) {
+      return res.status(400).json({
+        status: "error",
+        message: "Post not found",
+      });
+    }
+
+    if (userId.toString() !== post?.user.toString()) {
+      return res.status(400).json({
+        status: "error",
+        message: "This action is restricted.",
+      });
+    }
+
+    if (!text && !image) {
+      return res.status(400).json({
+        status: "error",
+        message: "Post must have text or image",
+      });
+    }
+
+    if (image) {
+      const uploadedImageResponse = await cloudinary.uploader.upload(image);
+      image = uploadedImageResponse?.secure_url;
+    } else {
+      await cloudinary.uploader.destroy(
+        post.image.split("/").pop().split(".")[0]
+      );
+    }
+
+    post.image = image;
+    post.text = text;
+    post.sourceType = sourceType;
+    post.user = userId;
+
+    await post.save();
+
+    res.status(201).json({
+      status: "success",
+      message: "Post updated successfully",
+    });
+  } catch (error) {
+    console.log(`editPost Post Controller : ${error.message}`);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
 export const deletePost = async (req, res) => {
   try {
-    const post = await Post.findbyId(req.params.postId);
+    const post = await Post.findById(req.params.postId);
     if (!post) {
       return res.status(404).json({
         status: "error",

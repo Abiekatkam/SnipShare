@@ -37,11 +37,12 @@ const CreatePostForm = ({ reference }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     formState.image = previewUrl;
-    formState.sourceType = source !== null
-      ? source.type.includes("image")
-        ? "image"
-        : "video"
-      : "";
+    formState.sourceType =
+      source !== null
+        ? source.type.includes("image")
+          ? "image"
+          : "video"
+        : "";
     CreatePostMutation(formState);
   };
 
@@ -55,12 +56,25 @@ const CreatePostForm = ({ reference }) => {
           },
           body: JSON.stringify(formState),
         });
-        await response.json();
-        queryClient.invalidateQueries({
-          queryKey: ["getAllPostFeed"],
-        });
-        if (!isPending) {
-          reference.current.click();
+        const responseData = await response.json();
+        if (responseData?.status === "success") {
+          queryClient.invalidateQueries({
+            queryKey: ["getAllPostFeed"],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["authorisedCurrentUser"],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["getUserPostFeed"],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["getUserLikedPost"],
+          });
+
+          if (!isPending) {
+            reference.current.click();
+          }
+          toast.success(responseData?.message);
         }
       } catch (error) {
         toast.error("Something went wrong! Please try again.");
@@ -139,7 +153,11 @@ const CreatePostForm = ({ reference }) => {
                 <IoClose />
               </button>
               {source.type.includes("image") ? (
-                <img src={previewUrl} alt="Preview" className="w-full h-full rounded-lg object-contain" />
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="w-full h-full rounded-lg object-contain"
+                />
               ) : (
                 <video
                   autoPlay

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   FaRegHeart,
   FaHeart,
-  FaRegCommentDots
+  FaRegCommentDots,
 } from "@/components/constants/Icons";
 import { Link } from "react-router-dom";
 import { getRelativeTime } from "../constants/DateFormat";
@@ -89,7 +89,7 @@ const PostCard = ({ posts }) => {
           </div>
 
           {authenticatedUser?._id == posts?.user?._id && (
-            <PostEditModal data={posts}/>
+            <PostEditModal data={posts} />
           )}
         </div>
         <div className="w-full h-fit flex flex-col items-start cursor-pointer">
@@ -99,7 +99,7 @@ const PostCard = ({ posts }) => {
             </div>
           )}
           {posts?.image && (
-            <div className="w-full h-fit">
+            <div className="w-full h-fit pt-2">
               <img
                 src={posts?.image}
                 alt="post image"

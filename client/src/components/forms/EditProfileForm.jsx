@@ -305,7 +305,7 @@ const EditProfileForm = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="absolute right-0 bottom-0 h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="absolute right-0 bottom-0 h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#09090a]"
                 onClick={handleCoverImageRemove}
               >
                 remove cover image
@@ -315,7 +315,7 @@ const EditProfileForm = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="absolute right-32 bottom-0 h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="absolute right-32 bottom-0 h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#09090a]"
                 onClick={handleProfileImageRemove}
               >
                 remove profile image
