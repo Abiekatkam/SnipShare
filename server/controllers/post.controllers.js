@@ -5,7 +5,7 @@ import Notification from "../models/notification.models.js";
 
 export const createPost = async (req, res) => {
   try {
-    const { description: text } = req.body;
+    const { description: text, sourceType } = req.body;
     let { image } = req.body;
     const userId = req.user._id.toString();
     const user = await User.findById(userId);
@@ -32,6 +32,7 @@ export const createPost = async (req, res) => {
       user: userId,
       text,
       image,
+      sourceType,
     });
 
     await newPost.save();

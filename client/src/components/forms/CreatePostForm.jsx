@@ -16,6 +16,7 @@ const CreatePostForm = ({ reference }) => {
   const [formState, setFormState] = useState({
     description: "",
     image: "",
+    sourceType: "",
   });
   const [source, setSource] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -36,6 +37,11 @@ const CreatePostForm = ({ reference }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     formState.image = previewUrl;
+    formState.sourceType = source !== null
+      ? source.type.includes("image")
+        ? "image"
+        : "video"
+      : "";
     CreatePostMutation(formState);
   };
 
@@ -63,7 +69,6 @@ const CreatePostForm = ({ reference }) => {
   });
 
   const imageFileInputRef = useRef(null);
-  const loader = false;
 
   const handleImageFileClick = () => {
     imageFileInputRef.current.click();
@@ -126,7 +131,7 @@ const CreatePostForm = ({ reference }) => {
           />
 
           {previewUrl && (
-            <div className=" mx-2 relative rounded-lg object-contain">
+            <div className="mx-2 relative rounded-lg">
               <button
                 className="absolute cursor-pointer z-10 top-1 border shadow-xl right-1 w-8 flex items-center justify-center bg-[#09090b] text-white dark:text-[#09090b] dark:bg-white h-8 text-xl rounded-full"
                 onClick={handleRemoveFile}
@@ -134,13 +139,13 @@ const CreatePostForm = ({ reference }) => {
                 <IoClose />
               </button>
               {source.type.includes("image") ? (
-                <img src={previewUrl} alt="Preview" className="rounded-lg" />
+                <img src={previewUrl} alt="Preview" className="w-full h-full rounded-lg object-contain" />
               ) : (
                 <video
                   autoPlay
                   controls
                   controlsList="nodownload nofullscreen"
-                  className="rounded-lg"
+                  className="w-full h-full rounded-lg object-contain"
                 >
                   <source src={previewUrl} type={source.type} />
                   Your browser does not support the video tag.

@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import {
   FaRegHeart,
   FaHeart,
-  FaRegCommentDots,
+  FaRegCommentDots
 } from "@/components/constants/Icons";
 import { Link } from "react-router-dom";
 import { getRelativeTime } from "../constants/DateFormat";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import PostEditModal from "../modals/PostEditModal";
 
 const PostCard = ({ posts }) => {
   const queryClient = useQueryClient();
@@ -72,18 +73,24 @@ const PostCard = ({ posts }) => {
         )}
       </div>
       <div className="w-[90%] h-full flex flex-col items-start">
-        <div className="w-full h-fit flex flex-row justify-start items-start">
-          <div className="w-fit h-fit flex flex-col gap-0">
-            <h1 className="text-md font-bold text-[#09090a] dark:text-white capitalize">
-              {posts?.user?.fullname}
-            </h1>
-            <span className="text-xs text-slate-500 font-semibold">
-              @{posts?.user?.username}
+        <div className="w-full h-fit flex flex-row justify-between items-start">
+          <div className="w-fit h-fit flex flex-row justify-start items-start">
+            <div className="w-fit h-fit flex flex-col gap-0">
+              <h1 className="text-md font-bold text-[#09090a] dark:text-white capitalize">
+                {posts?.user?.fullname}
+              </h1>
+              <span className="text-xs text-slate-500 font-semibold">
+                @{posts?.user?.username}
+              </span>
+            </div>
+            <span className="text-xs text-slate-500 mt-1 ml-3 font-semibold">
+              {getRelativeTime(posts?.createdAt)}
             </span>
           </div>
-          <span className="text-xs text-slate-500 mt-1 ml-3 font-semibold">
-            {getRelativeTime(posts?.createdAt)}
-          </span>
+
+          {authenticatedUser?._id == posts?.user?._id && (
+            <PostEditModal data={posts}/>
+          )}
         </div>
         <div className="w-full h-fit flex flex-col items-start cursor-pointer">
           {posts?.text && (
