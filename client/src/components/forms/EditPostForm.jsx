@@ -57,7 +57,13 @@ const EditPostForm = ({ data }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    EditPostMutation(formState);
+    if (formState.description.length > maxDescriptionLimit) {
+      toast.error("Description cannot exceed more than 250 characters");
+    } else if (formState.description == "" || !formState.image) {
+      toast.error("Atleast an attachment or description is needed to post.");
+    } else {
+      EditPostMutation(formState);
+    }
   };
 
   const { mutate: EditPostMutation, isPending: isEditPending } = useMutation({

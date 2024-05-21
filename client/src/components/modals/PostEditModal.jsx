@@ -14,7 +14,7 @@ const PostEditModal = ({ data }) => {
     <Dialog>
       <DialogTrigger
         variant="outline"
-        className="w-fit h-fit text-lg text-slate-500 dark:text-slate-400 dark:hover:text-white hover:text-[#09090a] transition-all ease-in duration-200"
+        className="w-fit h-fit text-lg text-slate-500 dark:text-slate-400 dark:hover:text-white hover:text-[#09090a] cursor-pointer transition-all ease-in duration-200"
       >
         <MdEdit />
       </DialogTrigger>

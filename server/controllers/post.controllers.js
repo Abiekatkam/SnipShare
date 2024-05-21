@@ -157,7 +157,7 @@ export const deletePost = async (req, res) => {
 
 export const commentOnPost = async (req, res) => {
   try {
-    const { text } = req.body;
+    const { comment: text } = req.body;
     const postId = req.params.postId;
     const userId = req.user._id;
 
@@ -273,6 +273,40 @@ export const getAllPosts = async (req, res) => {
     }
 
     return res.status(200).json(posts);
+  } catch (error) {
+    console.log(
+      `getAllPosts Post Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getSinglePosts = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.findById(postId)
+      .populate({
+        path: "user",
+        select: "-password",
+      })
+      .populate({
+        path: "comments.user",
+        select: "-password",
+      });
+    if (!post) {
+      return res.status(400).json({
+        status: "error",
+        message: "Post not found",
+      });
+    }
+    return res.status(200).json({
+      status: "success",
+      message: "Post found",
+      data: post,
+    });
   } catch (error) {
     console.log(
       `getAllPosts Post Controller : Something went wrong. ${error.message}`

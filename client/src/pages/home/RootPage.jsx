@@ -66,7 +66,7 @@ const RootPage = () => {
   return (
     <>
       <div className="md:flex-[4_4_0] mr-auto border-r border-slate-300 dark:border-slate-500  min-h-screen p-4 pt-0">
-        <div className="w-full h-[80px] sticky top-0 right-0 flex dark:bg-[#09090b] bg-white border-b border-b-slate-400">
+        <div className="w-full h-[80px] sticky z-50 top-0 right-0 flex dark:bg-[#09090b] bg-white border-b border-b-slate-400">
           <div
             className="w-1/2 h-full flex items-end justify-center cursor-pointer hover:bg-slate-100 dark:hover:bg-[#27272a]"
             onClick={() => setFeedType("ForYou")}

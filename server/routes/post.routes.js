@@ -8,6 +8,7 @@ import {
   getAllFollowingPosts,
   getAllPosts,
   getLikedPost,
+  getSinglePosts,
   getUsersPost,
   likeUnlikePost,
 } from "../controllers/post.controllers.js";
@@ -20,6 +21,7 @@ router.post("/like/:postId", restrictedRoute, likeUnlikePost);
 router.post("/comment/:postId", restrictedRoute, commentOnPost);
 router.post("/:postId", restrictedRoute, deletePost);
 router.get("/all", restrictedRoute, getAllPosts);
+router.get("/single/:postId", restrictedRoute, getSinglePosts);
 router.get("/following", restrictedRoute, getAllFollowingPosts);
 router.get("/likes/:userId", restrictedRoute, getLikedPost);
 router.get("/user/:username", restrictedRoute, getUsersPost);
