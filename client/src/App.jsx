@@ -5,6 +5,7 @@ import {
   ExplorePage,
   LoginPage,
   NotificationPage,
+  PostDetailPage,
   ProfileDetailPage,
   ProfilePage,
   RegisterPage,
@@ -25,16 +26,14 @@ const isRouteInList = (currentPath) => {
     "/notifications",
     "/settings",
     "/profile",
+    "/:postId"
   ];
 
-  // Check if the current path matches any of the static routes
   if (routeList.includes(currentPath)) {
     return true;
   }
 
-  // Check if the current path matches any parent routes with dynamic parameters
   return routeList.some((route) => {
-    // Replace dynamic parameters in the route with a regular expression pattern
     const regexRoute = route.replace(/:[^/]+/g, "\\w+");
     const regex = new RegExp(`^${regexRoute}(\/\\w+)*$`);
     return regex.test(currentPath);
@@ -85,6 +84,12 @@ const App = () => {
             path="/"
             element={
               authorisedCurrentUser ? <RootPage /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/:postId"
+            element={
+              authorisedCurrentUser ? <PostDetailPage /> : <Navigate to="/login" />
             }
           />
           <Route

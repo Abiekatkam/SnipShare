@@ -201,11 +201,8 @@ const EditPostForm = ({ data }) => {
                     controls
                     controlsList="nodownload nofullscreen"
                     className="w-full h-full rounded-lg object-contain"
+                    src={formState?.image}
                   >
-                    <source
-                      src={formState?.image}
-                      type={formState?.sourceType}
-                    />
                     Your browser does not support the video tag.
                   </video>
                 )

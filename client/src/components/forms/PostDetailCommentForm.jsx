@@ -54,6 +54,9 @@ const PostDetailCommentForm = ({ postId }) => {
             queryKey: ["authorisedCurrentUser"],
           });
           queryClient.invalidateQueries({
+            queryKey: ["getSinglePostDetails"],
+          });
+          queryClient.invalidateQueries({
             queryKey: ["getUserPostFeed"],
           });
           queryClient.invalidateQueries({
@@ -75,7 +78,7 @@ const PostDetailCommentForm = ({ postId }) => {
     className="w-full h-full flex flex-col items-start justify-bewteen gap-2"
     onSubmit={handleFormSubmit}
   >
-    <div className="w-full h-full flex flex-row items-start justify-start gap-2">
+    <div className="w-full h-full flex flex-row items-start justify-around gap-2">
       <div className="w-fit h-full flex items-start flex-col">
         <img
           src={authenticatedUser?.profileImage || "/avatar-placeholder.png"}
@@ -83,13 +86,12 @@ const PostDetailCommentForm = ({ postId }) => {
           className="w-11 h-11 rounded-full object-cover"
         />
       </div>
-      <div className="w-[89%] h-[100px] flex items-start flex-col overflow-y-scroll gap-2 pr-2">
+      <div className="w-[88%] h-fit flex items-start flex-col gap-2 pr-2">
         <Textarea
           placeholder="Comment your thoughts on this post..."
-          autoFocus
           name="comment"
           onChange={handleInputStateChange}
-          className="border dark:bg-[#09090b] resize-none min-h-[100px] focus-visible:ring-0 ring-0 focus-visible:ring-offset-0 text-sm font-normal leading-snug tracking-tight"
+          className="dark:bg-[#09090b] text-sm resize-none h-[80px] font-normal"
           value={formState.comment}
         />
       </div>

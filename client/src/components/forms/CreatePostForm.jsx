@@ -90,7 +90,13 @@ const CreatePostForm = ({ reference }) => {
 
   const handleImageFileChange = (event) => {
     const file = event.target.files[0];
+    const maxSize = 10485760;
+
     if (file) {
+      if (file.size > maxSize) {
+        toast.error("File size exceeds 10MB. Please choose a smaller file.");
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         setSource(file);

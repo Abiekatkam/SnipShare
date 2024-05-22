@@ -25,6 +25,7 @@ import {
   FaBell,
   FaRegUser,
   FaRegCalendarAlt,
+  FaArrowLeft,
 } from "react-icons/fa";
 import { MdOutlineMail, MdSearch, MdEdit } from "react-icons/md";
 import { SunIcon, MoonIcon } from "lucide-react";
@@ -65,4 +66,5 @@ export {
   FaHeart,
   FaRegCommentDots,
   MdEdit,
+  FaArrowLeft,
 };

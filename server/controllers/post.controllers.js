@@ -24,7 +24,14 @@ export const createPost = async (req, res) => {
     }
 
     if (image) {
-      const uploadedImageResponse = await cloudinary.uploader.upload(image);
+      let uploadedImageResponse = "";
+      if (sourceType == "image") {
+        uploadedImageResponse = await cloudinary.uploader.upload(image);
+      } else {
+        uploadedImageResponse = await cloudinary.uploader.upload(image, {
+          resource_type: "video",
+        });
+      }
       image = uploadedImageResponse.secure_url;
     }
 
@@ -89,7 +96,14 @@ export const editPost = async (req, res) => {
     }
 
     if (image) {
-      const uploadedImageResponse = await cloudinary.uploader.upload(image);
+      let uploadedImageResponse = "";
+      if (sourceType == "image") {
+        uploadedImageResponse = await cloudinary.uploader.upload(image);
+      } else {
+        uploadedImageResponse = await cloudinary.uploader.upload(image, {
+          resource_type: "video",
+        });
+      }
       image = uploadedImageResponse?.secure_url;
     } else {
       await cloudinary.uploader.destroy(

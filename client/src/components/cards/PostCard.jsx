@@ -6,7 +6,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import PostEditModal from "../modals/PostEditModal";
 import PostCommentModal from "../modals/PostCommentModal";
-import PostDetailModal from "../modals/PostDetailModal";
 
 const PostCard = ({ posts }) => {
   const queryClient = useQueryClient();
@@ -90,7 +89,38 @@ const PostCard = ({ posts }) => {
             <PostEditModal data={posts} />
           )}
         </div>
-        <PostDetailModal posts={posts} />
+
+        <Link
+          to={`/${posts?._id}`}
+          className="w-full h-fit flex flex-col items-start cursor-pointer transition-all ease-in duration-200 text-start"
+        >
+          {posts?.text && (
+            <div className="w-full h-fit py-2">
+              <p className="text-pretty text-md">{posts?.text}</p>
+            </div>
+          )}
+          {posts?.image && posts?.sourceType === "image" ? (
+            <div className="w-full h-fit pt-2">
+              <img
+                src={posts?.image}
+                alt="post image"
+                className="w-full h-fit object-contain rounded-md"
+              />
+            </div>
+          ) : (
+            <div className="w-full h-fit pt-2">
+              <video
+                autoPlay
+                controls
+                controlsList="nodownload nofullscreen"
+                className="w-full h-full rounded-lg object-contain"
+                src={posts?.image}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
+        </Link>
         <div className="w-full h-fit flex flex-row justify-end items-center gap-4 mt-4 border-t-2 border-slate-600/20 pt-1">
           <div
             className="w-fit flex flex-row gap-1 items-center text-sm font-semibold text-slate-500 group cursor-pointer transition-all ease-in duration-200"

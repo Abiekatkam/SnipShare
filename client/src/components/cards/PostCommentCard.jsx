@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const PostCommentCard = ({ commentData }) => {
   return (
-    <div className="w-full h-fit flex items-start gap-2 p-2 bg-slate-100 rounded-md mb-2">
+    <div className="w-full h-fit flex items-start gap-2 p-2 bg-slate-50 rounded-md mb-2">
       <Link to={`/profile/${commentData?.user?.username}`} className="w-fit h-full flex items-start flex-col">
         <img
           src={commentData?.user?.profileImage || "/avatar-placeholder.png"}
