@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utility/utils/generateTokenAndSetCookie.js";
 import { generateOTP } from "../utility/utils/generateOtp.js";
 import nodemailer from "nodemailer";
+import { isValidUsername } from "../utility/utils/validUsername.js";
 
 export const authRegister = async (req, res) => {
   try {
@@ -13,6 +14,13 @@ export const authRegister = async (req, res) => {
       return res.status(400).json({
         status: "error",
         message: "Invalid email format",
+      });
+    }
+
+    if (!isValidUsername(username)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Username is should only contains numbers and letters",
       });
     }
 

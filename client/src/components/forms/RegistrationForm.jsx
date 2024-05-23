@@ -32,12 +32,7 @@ const RegistrationForm = () => {
     }, 2000);
   };
 
-  const {
-    mutate: RegisterMutation,
-    isError,
-    isPending,
-    error,
-  } = useMutation({
+  const { mutate: RegisterMutation, isPending } = useMutation({
     mutationFn: async ({ email, username, fullname, password }) => {
       try {
         const response = await fetch("/api/auth/register", {
@@ -48,18 +43,15 @@ const RegistrationForm = () => {
           body: JSON.stringify({ email, username, fullname, password }),
         });
 
-        if (!response.ok) {
-          toast.error(response.message || "Failed to create an account.");
-        }
         const data = await response.json();
         if (data.status == "error") {
           return toast.error(data.message);
         }
-        if(data.status == "success"){
+        if (data.status == "success") {
           toast.success("Account created successfully");
           navigate("/login");
         }
-      }catch (error) {
+      } catch (error) {
         toast.error(error.message);
       }
     },

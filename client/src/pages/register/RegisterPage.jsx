@@ -78,7 +78,7 @@ const RegisterPage = () => {
 
           <Separator className="lg:my-5 my-3 bg-slate-950/50 dark:bg-slate-300" />
 
-          <div className="w-full my-3 lg:my-0 flex flex-col lg:flex-row items-center justify-center gap-3">
+          {/* <div className="w-full my-3 lg:my-0 flex flex-col lg:flex-row items-center justify-center gap-3">
             <Button
               variant="outline"
               className="lg:h-12 lg:w-12 h-8 w-[90%] p-2 text-sm dark:bg-transparent"
@@ -93,7 +93,7 @@ const RegisterPage = () => {
               <FaGithub className="lg:w-[25px] lg:h-[25px]" />{" "}
               <span className="lg:hidden ml-2"> Continue with Github</span>
             </Button>
-          </div>
+          </div> */}
 
           <div className="w-full lg:hidden my-4 flex flex-col items-center justify-center text-center">
             <p className="text-xs lg:text-md font-normal">
