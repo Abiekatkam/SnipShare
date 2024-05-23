@@ -1,7 +1,7 @@
 import WhoToFollow from "@/components/aside/WhoToFollow";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegCalendarAlt } from "@/components/constants/Icons";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ProfilePageLinks from "./ProfilePageLinks";
 import EditProfileModal from "@/components/modals/EditProfileModal";
 import FollowersListModal from "@/components/modals/FollowersListModal";
@@ -12,6 +12,7 @@ import CreatePostModal from "@/components/modals/CreatePostModal";
 
 const ProfilePage = () => {
   const [postType, setPostType] = useState(true);
+  const queryClient = useQueryClient();
 
   const { data: authenticatedUser } = useQuery({
     queryKey: ["authorisedCurrentUser"],
@@ -61,6 +62,7 @@ const ProfilePage = () => {
         if (!response.ok) {
           throw new Error(responseData.message || "Something went wrong!");
         }
+        console.log(responseData?.data);
         return responseData?.data;
       } catch (error) {
         throw new Error(error.message);
@@ -68,6 +70,15 @@ const ProfilePage = () => {
     },
     retry: false,
   });
+
+  useEffect(()=>{
+    queryClient.invalidateQueries({
+      queryKey: ["getUserPostFeed"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["getUserLikedPost"],
+    });
+  },[postType])
 
   return (
     <>
@@ -210,7 +221,7 @@ const ProfilePage = () => {
                   </div>
                 ) : (
                   getUserLikedPost &&
-                  getUserLikedPost.map((post) => (
+                  getUserLikedPost?.slice()?.reverse()?.map((post) => (
                     <PostCard key={post._id} posts={post} />
                   ))
                 )}

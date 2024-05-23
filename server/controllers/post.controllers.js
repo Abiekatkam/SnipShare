@@ -218,6 +218,101 @@ export const commentOnPost = async (req, res) => {
   }
 };
 
+export const deleteAllComment = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({
+        status: "error",
+        message: "Post not found",
+      });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+    const isValidUserPost = post.user._id.toString() == user._id.toString();
+    if (!isValidUserPost) {
+      return res.status(400).json({
+        status: "error",
+        message: "This action is restricted",
+      });
+    }
+
+    post.comments = [];
+
+    await post.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: "Comment deleted successfully.",
+    });
+  } catch (error) {
+    console.log(
+      `deleteAllComment Post Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const deleteSingleComment = async (req, res) => {
+  try {
+    const { commentId } = req.body;
+    const postId = req.params.postId;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(400).json({
+        status: "error",
+        message: "Post not found",
+      });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+    const isValidUserPost = post.user._id.toString() == user._id.toString();
+    if (!isValidUserPost) {
+      return res.status(400).json({
+        status: "error",
+        message: "This action is restricted",
+      });
+    }
+    const commentIndex = post.comments.findIndex((comment) =>
+      comment._id.equals(commentId)
+    );
+    post.comments.splice(commentIndex, 1);
+
+    await post.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: "Comment deleted successfully.",
+    });
+  } catch (error) {
+    console.log(
+      `deleteSingleComment Post Controller : Something went wrong. ${error.message}`
+    );
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+};
+
 export const likeUnlikePost = async (req, res) => {
   try {
     const userId = req.user._id;

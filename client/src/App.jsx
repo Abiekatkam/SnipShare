@@ -50,7 +50,6 @@ const App = () => {
       try {
         const response = await fetch("/api/auth/current-user");
         const responseData = await response.json();
-        console.log(responseData);
         if (responseData?.status == "error") {
           return null;
         }

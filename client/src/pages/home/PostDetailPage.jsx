@@ -13,6 +13,7 @@ import { getRelativeTime } from "@/components/constants/DateFormat";
 import PostDetailCommentForm from "@/components/forms/PostDetailCommentForm";
 import { Separator } from "@/components/ui/separator";
 import PostCommentCard from "@/components/cards/PostCommentCard";
+import { Button } from "@/components/ui/button";
 
 const PostDetailPage = () => {
   let { postId } = useParams();
@@ -27,7 +28,6 @@ const PostDetailPage = () => {
       try {
         const response = await fetch(`/api/posts/single/${postId}`);
         const responseData = await response.json();
-        console.log(responseData);
         if (responseData?.status == "error") {
           return null;
         }
@@ -74,6 +74,9 @@ const PostDetailPage = () => {
         queryClient.invalidateQueries({
           queryKey: ["getUserLikedPost"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["getSinglePostDetails"],
+        });
       }
     } catch (error) {
       toast.error("Something went wrong! Please try again.");
@@ -83,6 +86,64 @@ const PostDetailPage = () => {
   const [isLiked, setIsLiked] = useState(
     getSinglePostDetails?.likes.includes(authenticatedUser?._id)
   );
+
+  const isValidUserPost = getSinglePostDetails?.user?._id == authenticatedUser?._id;
+
+  const handleSinglePostComment = async (commentId) => {
+    try {
+      const response = await fetch(`/api/posts/deleteSingleComment/${getSinglePostDetails?._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ commentId: commentId }),
+      });
+      const responseData = await response.json();
+      if (responseData?.status == "error") {
+        return null;
+      }
+      if (!response.ok) {
+        throw new Error(responseData.message || "Something went wrong!");
+      }
+      if (responseData.status == "success") {
+        toast.success(responseData.message);
+        queryClient.invalidateQueries({
+          queryKey: ["getSinglePostDetails"],
+        });
+      }
+      return responseData;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  const handleAllPostComment = async () => {
+    try {
+      const response = await fetch(`/api/posts/deleteAllComment/${getSinglePostDetails?._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+      if (responseData?.status == "error") {
+        return null;
+      }
+      if (!response.ok) {
+        throw new Error(responseData.message || "Something went wrong!");
+      }
+      if (responseData.status == "success") {
+        toast.success(responseData.message);
+        queryClient.invalidateQueries({
+          queryKey: ["getSinglePostDetails"],
+        });
+      }
+      return responseData;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
 
   return (
     <>
@@ -131,7 +192,8 @@ const PostDetailPage = () => {
                   </span>
                 </div>
                 <span className="text-xs text-slate-500 mt-1 ml-3 font-semibold">
-                  {getSinglePostDetails?.createdAt && getRelativeTime(getSinglePostDetails?.createdAt)}
+                  {getSinglePostDetails?.createdAt &&
+                    getRelativeTime(getSinglePostDetails?.createdAt)}
                 </span>
               </div>
             </div>
@@ -202,13 +264,23 @@ const PostDetailPage = () => {
           <PostDetailCommentForm postId={postId} />
           <Separator className="my-3" />
           <div className="w-full h-fit flex flex-col justify-between items-start">
-            <div className="w-full flex flex-row gap-1 items-center text-sm font-semibold text-slate-500 transition-all ease-in duration-200 mb-2">
-              Comments ({getSinglePostDetails?.comments?.length})
+            <div className="w-full flex flex-row gap-1 items-center justify-between text-sm font-semibold text-slate-500 transition-all ease-in duration-200 mb-2">
+              <span>Comments ({getSinglePostDetails?.comments?.length})</span>
+              {getSinglePostDetails?.comments?.length > 0 && isValidUserPost && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-5 p-0 outline-none border-0 capitalize text-xs border-b rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-slate-300"
+                  onClick={handleAllPostComment}
+                >
+                  clear all notifications
+                </Button>
+              )}
             </div>
             <div className="w-full h-fit max-h-[490px] overflow-y-scroll flex flex-col items-start">
               {getSinglePostDetails?.comments.length > 0 ? (
                 getSinglePostDetails?.comments?.map((comment) => (
-                  <PostCommentCard commentData={comment} key={comment?._id} />
+                  <PostCommentCard commentData={comment} key={comment?._id} isValidUserPost={isValidUserPost} handleSinglePostComment={handleSinglePostComment} />
                 ))
               ) : (
                 <div className="w-full h-[200px] flex items-center justify-center rounded-md bg-slate-100 dark:bg-[#27272a] mt-2">

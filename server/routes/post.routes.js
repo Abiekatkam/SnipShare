@@ -3,7 +3,9 @@ import { restrictedRoute } from "../utility/middleware/restrictedRoute.js";
 import {
   commentOnPost,
   createPost,
+  deleteAllComment,
   deletePost,
+  deleteSingleComment,
   editPost,
   getAllFollowingPosts,
   getAllPosts,
@@ -19,6 +21,8 @@ router.post("/create", restrictedRoute, createPost);
 router.post("/edit", restrictedRoute, editPost);
 router.post("/like/:postId", restrictedRoute, likeUnlikePost);
 router.post("/comment/:postId", restrictedRoute, commentOnPost);
+router.post("/deleteAllComment/:postId", restrictedRoute, deleteAllComment);
+router.post("/deleteSingleComment/:postId", restrictedRoute, deleteSingleComment);
 router.post("/:postId", restrictedRoute, deletePost);
 router.get("/all", restrictedRoute, getAllPosts);
 router.get("/single/:postId", restrictedRoute, getSinglePosts);
