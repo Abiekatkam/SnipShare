@@ -66,6 +66,8 @@ const App = () => {
     retry: false,
   });
 
+  console.log(authorisedCurrentUser);
+
   if (isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center dark:bg-[#09090b] bg-white">

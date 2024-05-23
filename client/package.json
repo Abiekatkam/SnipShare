@@ -34,6 +34,7 @@
     "react-icons": "^5.1.0",
     "react-router-dom": "^6.23.0",
     "react-toastify": "^10.0.5",
+    "snipshare": "file:..",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },

@@ -4,8 +4,9 @@
   "description": "A simple social media platform using react.",
   "main": "server/main.js",
   "scripts": {
-    "dev": "nodemon server/main.js",
-    "start": "nodemon server/main.js"
+    "dev": "NODE_ENV=development nodemon server/main.js",
+    "start": "cross-env NODE_ENV=production node server/main.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
     "type": "git",
