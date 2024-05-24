@@ -2,10 +2,10 @@
 A simple social media platform using MERN stack and other technologies.
 
 ## Preview Poster
-# Home Page - light mode
+### Home Page - light mode
 ![Screenshot 2024-05-24 101404](https://github.com/Abiekatkam/SnipShare/assets/101975840/ee25ed69-2a5c-4d0f-b905-53e4aab8fb1b)
 
-# Home Page - dark mode
+### Home Page - dark mode
 ![Screenshot 2024-05-24 101510](https://github.com/Abiekatkam/SnipShare/assets/101975840/6c6d1147-ffdc-4cf3-8f53-c930908e8fb7)
 
 ## Tech stacks
