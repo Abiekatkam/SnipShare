@@ -1,5 +1,5 @@
 # SnipShare
-A simple social media platform using MERN stack and other technologies.
+SnipShare is an innovative social media platform developed using the MERN stack (MongoDB, Express.js, React, Node.js) to provide users with a seamless and engaging experience. SnipShare allows users to upload images, like, share, and interact with content, all while ensuring robust authorization and security.
 
 ## Preview Poster
 ### Home Page - light mode
