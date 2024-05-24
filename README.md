@@ -1,6 +1,13 @@
 # SnipShare
 A simple social media platform using MERN stack and other technologies.
 
+## Preview Poster
+# Home Page - light mode
+![Screenshot 2024-05-24 101404](https://github.com/Abiekatkam/SnipShare/assets/101975840/ee25ed69-2a5c-4d0f-b905-53e4aab8fb1b)
+
+# Home Page - dark mode
+![Screenshot 2024-05-24 101510](https://github.com/Abiekatkam/SnipShare/assets/101975840/6c6d1147-ffdc-4cf3-8f53-c930908e8fb7)
+
 ## Tech stacks
 1. MERN [MongoDB, ExpressJS, ReactJS, NodeJS]
 2. Shadcn ui (for better UI components) [preview site](https://ui.shadcn.com/)
@@ -22,3 +29,6 @@ A simple social media platform using MERN stack and other technologies.
 11. Image Uploads using Cloudinary
 12. Send Notifications
 13. and much more
+
+## Important note
+This project is not responsive, as it is work in progress mode.
