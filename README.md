@@ -30,5 +30,8 @@ SnipShare is an innovative social media platform developed using the MERN stack 
 12. Send Notifications
 13. and much more
 
+## Hosted Live URL:
+[SnipShare preview site](https://snipshare-w4x0.onrender.com)
+
 ## Important note
 This project is not responsive, as it is work in progress mode.
